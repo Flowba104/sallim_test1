@@ -1,0 +1,108 @@
+"""API + 데이터 스키마. shared/api-types.ts와 같은 모양."""
+from typing import Literal
+
+from pydantic import BaseModel, ConfigDict, Field, model_validator
+
+Category = Literal[
+    "투명페트", "플라스틱", "종이", "종이팩", "캔·고철", "유리병",
+    "비닐", "스티로폼", "일반쓰레기", "음식물", "전용수거", "대형폐기물",
+]
+StateKey = Literal["has_label", "has_contents", "is_dirty", "is_coated"]
+WEEKDAYS = ["월", "화", "수", "목", "금", "토", "일"]
+
+
+class Source(BaseModel):
+    title: str = Field(min_length=1)
+    url: str = Field(min_length=1)
+    updated: str
+
+
+class Region(BaseModel):
+    id: str
+    name: str
+
+
+class ItemState(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    has_label: bool | None = None
+    has_contents: bool | None = None
+    is_dirty: bool | None = None
+    is_coated: bool | None = None
+
+
+class AskRequest(BaseModel):
+    region_id: str
+    question: str | None = None
+    image_base64: str | None = None
+
+    @model_validator(mode="after")
+    def _need_input(self):
+        if not (self.question and self.question.strip()) and not self.image_base64:
+            raise ValueError("question 또는 image_base64 중 하나는 필요합니다")
+        return self
+
+
+class FollowUpRequest(BaseModel):
+    region_id: str
+    item_key: str
+    state: ItemState
+
+
+class FollowUp(BaseModel):
+    key: StateKey
+    question: str
+
+
+class AskResponse(BaseModel):
+    item_key: str | None
+    item_name: str | None
+    category: Category | None
+    answer: str
+    steps: list[str]
+    next_days: list[str]
+    time: str | None
+    confident: bool
+    follow_up: FollowUp | None
+    sources: list[Source]
+    note: str | None = None  # 동네 데이터의 예외 안내 (아파트별 요일 차이 등)
+
+
+class ScheduleResponse(BaseModel):
+    region_id: str
+    today: str
+    today_categories: list[str]
+    week: dict[str, list[str]]
+    time: str | None
+    sources: list[Source]
+    note: str | None = None
+
+
+# ---- 데이터 파일 스키마 (data/) ----
+
+class Item(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    name: str = Field(min_length=1)
+    aliases: list[str] = []
+    category: Category
+    visual_hint: str = ""
+    steps: list[str]
+    conditions: dict[StateKey, str] = {}
+    sources: list[Source] = Field(min_length=1)  # 출처 없는 항목 금지
+    note: str | None = None
+
+
+class DropOffPoint(BaseModel):
+    type: str
+    where: str
+    url: str | None = None
+
+
+class RegionData(BaseModel):
+    id: str
+    name: str
+    week: dict[Literal["월", "화", "수", "목", "금", "토", "일"], list[Category]] = {}
+    time: str | None = None
+    overrides: dict[str, str] = {}
+    drop_off_points: list[DropOffPoint] = []
+    sources: list[Source] = Field(min_length=1)
+    note: str | None = None

@@ -1,0 +1,5 @@
+filename,item_key
+sample_pet.mock,pet_bottle_clear
+sample_glass.mock,glass_bottle
+sample_unknown.mock,unknown
+sample_wrong.mock,pet_bottle_clear

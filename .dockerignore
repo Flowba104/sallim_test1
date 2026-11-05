@@ -1,0 +1,9 @@
+**/.venv
+**/__pycache__
+**/.env
+app/
+docs/
+.agent-mail*
+scripts/
+server/tests
+server/eval

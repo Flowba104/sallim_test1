@@ -1,0 +1,82 @@
+{
+  "version": "1.0.0",
+  "grid": 24,
+  "strokeWidth": 2,
+  "stroke": "currentColor",
+  "fill": "none",
+  "style": "자체 제작 단순 선형 도형",
+  "categories": [
+    {
+      "category": "투명페트",
+      "file": "pet-bottle-clear.svg",
+      "label": "투명페트",
+      "description": "짧은 목과 가로 요철이 있는 음료병"
+    },
+    {
+      "category": "플라스틱",
+      "file": "plastic.svg",
+      "label": "플라스틱",
+      "description": "카테고리를 대표하는 단순 도형"
+    },
+    {
+      "category": "종이",
+      "file": "paper.svg",
+      "label": "종이",
+      "description": "접힌 귀가 있는 종이 한 장"
+    },
+    {
+      "category": "종이팩",
+      "file": "paper-carton.svg",
+      "label": "종이팩",
+      "description": "지붕 모양으로 접힌 팩"
+    },
+    {
+      "category": "캔·고철",
+      "file": "metal.svg",
+      "label": "캔·고철",
+      "description": "카테고리를 대표하는 단순 도형"
+    },
+    {
+      "category": "유리병",
+      "file": "glass-bottle.svg",
+      "label": "유리병",
+      "description": "긴 목과 매끈한 몸체의 병"
+    },
+    {
+      "category": "비닐",
+      "file": "vinyl.svg",
+      "label": "비닐",
+      "description": "카테고리를 대표하는 단순 도형"
+    },
+    {
+      "category": "스티로폼",
+      "file": "styrofoam.svg",
+      "label": "스티로폼",
+      "description": "카테고리를 대표하는 단순 도형"
+    },
+    {
+      "category": "일반쓰레기",
+      "file": "general-waste.svg",
+      "label": "일반쓰레기",
+      "description": "카테고리를 대표하는 단순 도형"
+    },
+    {
+      "category": "음식물",
+      "file": "food-waste.svg",
+      "label": "음식물",
+      "description": "카테고리를 대표하는 단순 도형"
+    },
+    {
+      "category": "전용수거",
+      "file": "collection-only.svg",
+      "label": "전용수거",
+      "description": "카테고리를 대표하는 단순 도형"
+    },
+    {
+      "category": "대형폐기물",
+      "file": "bulky-waste.svg",
+      "label": "대형폐기물",
+      "description": "카테고리를 대표하는 단순 도형"
+    }
+  ]
+}

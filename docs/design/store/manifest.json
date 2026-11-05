@@ -1,0 +1,50 @@
+{
+  "status": "디자인 초안 · 실제 앱 캡처 아님",
+  "canvas": {
+    "width": 1080,
+    "height": 1920
+  },
+  "source": "../drafts/warm-note/index.html",
+  "screens": [
+    {
+      "order": "01",
+      "id": "store-photo",
+      "filename": "01-photo.png",
+      "headline": "이건 어디에? 찍어서 알아봐요.",
+      "description": "사진 한 장에서 품목을 확인해요.",
+      "ui_screen": "camera"
+    },
+    {
+      "order": "02",
+      "id": "store-method",
+      "filename": "02-method.png",
+      "headline": "투명페트는 이 순서로.",
+      "description": "비우고, 헹구고, 라벨을 떼고.",
+      "ui_screen": "result"
+    },
+    {
+      "order": "03",
+      "id": "store-schedule",
+      "filename": "03-schedule.png",
+      "headline": "우리 동네 배출 요일까지.",
+      "description": "방법 옆에 요일과 시간도 함께.",
+      "ui_screen": "home"
+    },
+    {
+      "order": "04",
+      "id": "store-followup",
+      "filename": "04-followup.png",
+      "headline": "애매한 상태는 한 번 더 확인.",
+      "description": "예·아니오로 맞춰 가는 배출 안내.",
+      "ui_screen": "followup"
+    },
+    {
+      "order": "05",
+      "id": "store-question",
+      "filename": "05-question.png",
+      "headline": "사진이 없어도 이름으로 물어봐요.",
+      "description": "품목을 적으면 결과 카드로 간단하게.",
+      "ui_screen": "question"
+    }
+  ]
+}

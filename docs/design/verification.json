@@ -1,0 +1,184 @@
+{
+  "date": "2026-11-03T21:52:42.781Z",
+  "tool": "Playwright Chromium (headless)",
+  "screens": [
+    {
+      "direction": "warm-note",
+      "screen": "region",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "direction": "warm-note",
+      "screen": "home",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "direction": "warm-note",
+      "screen": "camera",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "direction": "warm-note",
+      "screen": "result",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "direction": "warm-note",
+      "screen": "followup",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "direction": "warm-note",
+      "screen": "question",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "direction": "clear-grid",
+      "screen": "region",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "direction": "clear-grid",
+      "screen": "home",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "direction": "clear-grid",
+      "screen": "camera",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "direction": "clear-grid",
+      "screen": "result",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "direction": "clear-grid",
+      "screen": "followup",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "direction": "clear-grid",
+      "screen": "question",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "direction": "paper-light",
+      "screen": "region",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "direction": "paper-light",
+      "screen": "home",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "direction": "paper-light",
+      "screen": "camera",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "direction": "paper-light",
+      "screen": "result",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "direction": "paper-light",
+      "screen": "followup",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "direction": "paper-light",
+      "screen": "question",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "direction": "bold-signal",
+      "screen": "region",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "direction": "bold-signal",
+      "screen": "home",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "direction": "bold-signal",
+      "screen": "camera",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "direction": "bold-signal",
+      "screen": "result",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "direction": "bold-signal",
+      "screen": "followup",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "direction": "bold-signal",
+      "screen": "question",
+      "width": 390,
+      "height": 844
+    }
+  ],
+  "checks": [
+    "warm-note: 390×844 six captures; targets≥44; yes/no, Thu/Sat, text form; 375px no horizontal overflow",
+    "clear-grid: 390×844 six captures; targets≥44; yes/no, Thu/Sat, text form; 375px no horizontal overflow",
+    "paper-light: 390×844 six captures; targets≥44; yes/no, Thu/Sat, text form; 375px no horizontal overflow",
+    "bold-signal: 390×844 six captures; targets≥44; yes/no, Thu/Sat, text form; 375px no horizontal overflow"
+  ],
+  "errors": [],
+  "png_binary_dimensions": {
+    "count": 24,
+    "width": 390,
+    "height": 844,
+    "method": "viewport capture at integer origin; PNG IHDR checked"
+  },
+  "final_inventory": {
+    "html": 10,
+    "png": 49,
+    "svg": 14,
+    "phone_screens": 34,
+    "store_posters": 5
+  },
+  "final_checks": [
+    "all local links and anchors exist",
+    "all HTML IDs unique per file",
+    "no image references; inline SVG only",
+    "34 phone PNG files390x844",
+    "5 store PNG files1080x1920",
+    "all SVG XML and JSON parse"
+  ],
+  "additional_checks": {
+    "D4": "5 state boards, retry demo, no horizontal/vertical default overflow, JS errors0",
+    "D8": "5 extended boards, targets>=44, retry demo, no default overflow, JS errors0",
+    "D9": "1024 icon and transparent mark, 390x844 splash, 180/80/48 preview and RGBA corner alpha0",
+    "D10": "5 posters1080x1920, UI clear of footer, JS errors0"
+  }
+}

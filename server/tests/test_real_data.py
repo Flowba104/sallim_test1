@@ -1,0 +1,30 @@
+"""레포 data/의 실데이터 검증. data/가 아직 없으면 건너뛴다."""
+import pytest
+
+from app import data
+from app.match import match_text, normalize
+
+REAL = data.DEFAULT_DATA_DIR
+pytestmark = pytest.mark.skipif(not (REAL / "items.json").exists(), reason="data/items.json 없음")
+
+
+@pytest.fixture(scope="module")
+def store():
+    return data.load(REAL)  # 스키마 오류면 여기서 DataError
+
+
+def test_every_item_name_matches_itself(store):
+    for key, it in store.items.items():
+        assert match_text(it.name, store.items) == key, f"{key}: 이름 '{it.name}'로 못 찾음"
+
+
+def test_no_alias_shared_between_items(store):
+    owner = {}
+    for key, it in store.items.items():
+        for t in {normalize(x) for x in [it.name, *it.aliases]}:
+            assert owner.setdefault(t, key) == key, f"'{t}'가 {owner[t]}와 {key}에 같이 있음"
+
+
+def test_regions_have_schedule_or_note(store):
+    for r in store.regions.values():
+        assert r.week or r.note, f"{r.id}: week도 note도 없음"

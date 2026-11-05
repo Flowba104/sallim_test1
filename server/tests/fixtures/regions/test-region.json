@@ -1,0 +1,8 @@
+{
+  "id": "test-region",
+  "name": "테스트구",
+  "week": {"월": ["일반쓰레기"], "화": ["투명페트", "유리병"], "금": ["투명페트"]},
+  "time": "18:00~24:00",
+  "overrides": {"battery": "주민센터 폐건전지 수거함에 넣어요."},
+  "sources": [{"title": "테스트구 안내", "url": "https://example.com/region", "updated": "2026-01"}]
+}
