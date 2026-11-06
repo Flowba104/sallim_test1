@@ -1,88 +1,80 @@
-# SaLLiM 컴포넌트 명세 · A 살림 노트
+# SaLLiM 컴포넌트 명세 · U1 / A 살림 노트
 
-기준: [tokens.json](tokens.json), [A 화면](drafts/warm-note/index.html), [상태 화면](states/index.html), `shared/api-types.ts`의 note 포함 계약. 디자인 초안이며 오너 최종 선택 전이다. 앱 코드는 coder가 담당한다.
+2026-11-06 · MISSION v2 및 lead MSG-0003 확정. 기준: [tokens.json](tokens.json) v2.0.0, [방향 원형](drafts/warm-note/index.html), `shared/api-types.ts`. 이전 HTML은 시각 원형이며 이 문서와 화면별 `specs/U<n>.md`가 구현 기준이다. 앱 구현은 coder 소유다.
 
-## 토큰 사용
+## 토큰 계약
 
-`primitives`는 색·간격 원재료, `colors`·`space`·`radius`·`typography`는 의미별 값, `components`는 컴포넌트별 값이다. RN에서 바로 쓰도록 모든 별칭을 계산한 값으로 제공한다. `aliases`는 대응 관계를 설명하는 메타데이터이며 실행 시 해석할 필요가 없다. 길이는 RN 논리 px 숫자, 색은 hex, 글자 굵기는 RN 문자열이다.
+- `primitives` → `themes[mode].colors`·`space`·`radius`·`typography` → `componentAliases` 순서로 사용한다. `colors`는 라이트 호환값이고 `components`의 raw 색도 라이트 참고값이다. 다크는 의미 토큰을 다시 조회하며 raw 색을 복사하지 않는다.
+- `app/theme.ts`의 기존 공개 키를 보존한다. 디바이스 모드 또는 설정의 시스템/라이트/다크 선택을 하나의 테마로 공급한다. 카테고리는 `categoryGroups`로 묶고 `categoryColors[mode][group]`의 bg/text를 사용한다. 12개 카테고리를 색만으로 구별하지 않는다.
+- Pretendard 정적 Regular 400 / Medium 500 / SemiBold 600 / Bold 700을 로컬 `expo-font`로 로드한다. 각 weight에 맞는 family 이름은 `meta.fontFamily`. 네트워크 CDN에 의존하지 않는다. 폰트 로드 실패 시 System/sans-serif로 계속 사용할 수 있다. 폰트 자산 설치·라이선스 보관은 coder 담당.
+- `typography.body`=16/24, `label`=14/20, `caption`=12/18, `resultTitle`=28/36, `heading`=32/40, `display`=48/56. 본문·버튼에 임의 축소 금지. 큰 글자 허용, 줄 수 제한 없이 늘어난다.
+- 390×844, 페이지 좌우 `space.page`=20 → 본문 폭350. top/bottom safe area는 실제 기기 값을 사용한다. 캡처 기준30/20은 미리보기뿐이다. 기본 헤더 `sizes.headerMinHeight`=64, 하단 탭 `sizes.tabBarMinHeight`=70+bottom inset. 본문 ScrollView는 탭을 제외한 영역에서 스크롤한다.
+- 주 간격 `space.sm/smPlus/md/lg/xl`=8/12/16/24/32. 카드 `radius.md`=20, 버튼 `radius.button`=14. 모든 주요 터치48 이상, 절대 하한44. 높이는 최소값이며 844에 화면을 고정하지 않는다.
 
-기존 `app/theme.ts`의 `colors.bg/text/subtext/primary/border/warn/error`, `space.xs/sm/md/lg`, `radius.sm/md`를 모두 유지했다. `radius.sm=8`, `radius.md=20`, 주요 버튼은 `radius.button=14`. 새 값은 추천안을 구현하기 위한 값이며 HTML의 폰 프레임 그림자는 앱 카드에 그대로 적용하지 않는다.
+## 공통 상태 계약
 
-- 기본 면: bg `#F7F3E8`, surface `#FFFEF9`, 주색 `#2E5943`, 본문 `#253D32`, 보조 `#536157`.
-- 본문 16/24, 보조 12/18, 결과 제목 28/36, 화면 제목 32/40. 글자 크기·줄 높이는 토큰 숫자를 쓴다.
-- 페이지 좌우 20, 주요 간격 8/12/16/24, 카드 반경 20, 버튼 반경 14. 평면+구분선이 기본이며 그림자는 선택적으로 `shadow.card`만 쓴다.
-- RN은 iOS System / Android sans-serif로 시작한다. 웹의 Pretendard CDN이 RN 폰트를 설치하는 것은 아니다. Pretendard가 필요하면 앱 폰트 자산·로딩을 별도로 연결한다.
+| 상태 | 면 / 글자 / 선 | 동작·표현 |
+|---|---|---|
+| 기본 primary | `colors.primary` / `onPrimary` | Button 아이콘20+gap8+문구, 가운데 정렬 |
+| 기본 secondary | `surface` / `text` / `border` 1 | 주 버튼과 같은 높이, 보조 행동도 읽을 수 있게 유지 |
+| 눌림 primary | `primaryPressed` / `onPrimary` | `motion.pressMs`100, scale `motion.pressScale`0.98. 복귀100ms, easing.standard |
+| 눌림 secondary·행 | `surfacePressed` / `text` | 100ms, 텍스트와 아이콘 색 유지. 그림자 추가 없음 |
+| 선택 칩·요일 | `primary` / `onPrimary`, 선2 | 체크 아이콘 또는 selected 접근성 상태+굵기. 색만으로 의미 전달 금지 |
+| 비활성 | `disabledBg` / `disabledText`, opacity1 | 접근성 disabled. 비활성 사유는 인접 caption. 터치·햅틱·중복 요청 없음 |
+| 로딩 | 기본 면 유지, spinner+“확인 중이에요” | 너비·최소 높이 유지, busy, 중복 클릭 차단. 스피너는 장식, 문구는 상태변화 시 1회 읽음 |
+| 오류 | `errorBg` / `error` + 경고 아이콘 | 오류 제목·다음 행동을 함께 표시. 입력·선택 유지, 원시 스택/HTTP 내부정보 없음 |
+| 포커스 | `focus`, `border.focus`3 | 웹 키보드에서 외곽선. native는 읽을 수 있는 label/state. 키보드와 고정 탭에 가리지 않음 |
 
-## 구성과 크기
+모든 상태는 라이트/다크 동일한 토큰 이름으로 적용한다. 경고는 `warnBg/warn`, 카메라 위 UI는 `cameraBg/onCamera`, 스크림은 `overlay`다. 비활성 색에 opacity를 곱해 대비를 떨어뜨리지 않는다.
 
-| 컴포넌트 | 구성 | 크기·배치 | 상태·접근성 |
-|---|---|---|---|
-| AppHeader | SaLLiM 워드마크 + 슬로건 + 동네 버튼 | 좌우 20, 헤더 최소 64, 위치 버튼 48 이상 | 동네 이름을 읽을 수 있는 레이블. 상태바 safe area와 분리 |
-| PrimaryButton | 아이콘 선택 + 행동 문구 | 최소 높이 52, 좌우 16, 세로 12, 반경 14 | 기본 primary/onPrimary, 누름 primaryPressed. 처리 중 busy+“확인 중”, 중복 제출 막기 |
-| SecondaryButton | 테두리 + 행동 문구 | Primary와 동일, border 1 | surface/text. 링크·작은 글자로 보조 행동을 축소하지 않기 |
-| ResultCard | 품목·카테고리 → 설명 → 순서 → 일정·note → 출처 → 상태 확인 | padding 20, gap 16, radius 20, divider 1 | 경고는 제목보다 먼저. 긴 품목명·절차는 줄바꿈, 말줄임 없음 |
-| CategoryTag | 20px 아이콘 + 정확한 카테고리 이름 | x10/y5, gap6, radius999 | tint/primary. 비조작 요소는 48px 대상 아님. 장식 아이콘은 읽기에서 제외 |
-| StepList | 01·02·03 번호 + steps 원문 | 번호 28, gap12, 행 세로12, 구분선1 | 순서가 있는 목록. 줄 수 제한 없음. HTML 예시는 요약문이며 앱은 API 원문 유지 |
-| ScheduleCard | “다음 배출 요일” + 요일 + 시간 + note | padding16, radius20, tint | note는 요일·시간 바로 아래, 12/18 이상. 출처 뒤에 숨기지 않기 |
-| WeekSelector | 월~일 버튼 + 선택 요일의 카테고리 목록 | minWidth44, minHeight52, gap2 | 선택은 색+굵기+selected 의미. 작은 화면은 줄바꿈/가로 스크롤 대신 폭 재계산, 44 미만 금지 |
-| FollowUpCard | 품목 맥락 + 질문 + 예/아니오 | 카드 padding20, 선택 간격12, 각각 최소52 | 긴 질문 줄바꿈. 320px 또는 큰 글자에서 선택 버튼 세로 배치 |
-| SourceDisclosure | 안내 아이콘 + “출처” + 제목, 펼친 상세에 링크·자료 기준 | 요약 및 링크 각각 48 이상, 글자12/18 | 접힘 상태 expanded 제공. 링크 레이블에 출처 제목 포함. 긴 제목 줄바꿈 |
-| WarningBanner | 경고 아이콘 + 제목 + 설명 | padding12, gap8, radius8 | warnBg/warn, 7.74:1. 색만으로 의미 전달하지 않기 |
-| ItemQuestion | 항상 보이는 label + 여러 줄 입력 + 보조문구 + 제출 | 입력 최소120, 글자16/24, radius14 | 빈 입력 오류는 필드 바로 아래. 키보드가 제출 버튼을 가리지 않게 스크롤 |
-| BottomTabs | 홈 / 찍기 / 물어보기 / 설정 | 높이 최소70 + 하단 safe area, 아이콘24, 레이블12/18 | 현재 탭 selected, 아이콘+글자. 카메라 결과에서도 찍기 탭 유지 |
+## U1 컴포넌트 계약
 
-모든 주요 조작 최소48, 절대 하한44. 높이는 고정값이 아닌 **최소값**이다. 큰 글자에서도 텍스트를 자르지 않고 늘어난다. 화면 전체를 844 높이로 고정하는 코드는 앱에 옮기지 않는다.
+| 컴포넌트 | 구조·치수 | 상태·구현 완료 조건 |
+|---|---|---|
+| Button | 최소52, x `space.md`16 / y `smPlus`12, radius.button, label typography.button | primary/secondary/ghost. 기본·눌림·비활성·loading 제공. primary/capture/choice haptic은 성공한 사용자 입력에 각각 light/medium/selection, 오류는 최초1회. 웹은 무음으로 정상 동작 |
+| Card | x/y `space.page`20, gap.md16, radius.md, divider1, surface | 정적인 카드는 터치 효과 없음. 클릭 카드만 surfacePressed. title/내용/하단행 자유 높이. 기본 shadow.none, 겹치는 시트만 shadow.overlay |
+| Chip | minH48, x.smPlus12 / y.sm8, gap.iconGap6, radius.pill | 기본 surface/text/border1, 선택 primary/onPrimary/선2. 비활성 공통 규칙. 문구가 길면 다음 행으로, 줄바꿈 시 높이 증가 |
+| CategoryBadge | icon20 + 정확한 카테고리 label14/20, x.chipX10 / y.xs4, gap.iconGap6, radius.pill | `categoryColors[mode][group]`. 비조작 뱃지는 48 높이 불필요. 탭 기능이 있으면 외부 터치48. 로딩은 스켈레톤, unknown에 가짜 카테고리 금지 |
+| Sheet | 전체 폭390, 위 radius.lg28, surfaceRaised, x.page20, handle40×4, max85% viewport | 열기280ms easing.enter + scrim fade200ms. 닫기200ms easing.exit. dismiss 버튼48, back/배경탭 동작. 본문 스크롤·키보드 회피·포커스 가두기 및 닫힌 뒤 호출자로 복귀. 드래그만으로 닫게 만들지 않음 |
+| Skeleton | colors.skeleton / skeletonHighlight, line16, gap12, radius.sm8 | 의미가 다른 블록 크기 예약. 1200ms opacity0.55→1→0.55 easing.standard 반복. reduced motion은 정지. 상태 문구 “배출 방법을 확인하고 있어요”, 임의 진행률/3초 카운트다운 금지 |
+| Toast | text/bg 반전, x.md16 / y.smPlus12, radius.button, minH48, maxW350 | tab 위 gap.smPlus12, 180ms fade easing.standard, 4000ms 노출. 닫기48. 보조 확인만 사용, 필수 오류나 출처·일정 정보를 자동 사라지는 toast에 넣지 않음 |
+| EmptyState | icon48, 제목 section18/26, 본문16/24, gap.md16, padding.lg24, radius.md | 빈 목록·unknown·오프라인 각각 전용 문구+아이콘+복구 CTA. 상단 경고·입력 오류와 혼동하지 않음 |
 
-## 결과 API 필드 대응
+## 합성 요소
 
-| AskResponse | 표시·동작 |
+| 요소 | 배치 | 중요한 상태 |
+|---|---|---|
+| AppHeader | min64, 좌우20, SaLLiM+슬로건, 동네버튼 min48 | 긴 지역명은 줄바꿈. 지역 로딩은 짧은 skeleton, 지역 오류는 선택 행동 유지 |
+| StepList | 번호28, gap.smPlus12, 행 y.smPlus12, divider1 | steps 순서 그대로. 완료 체크는 로컬 사용상태일 뿐 분류 확신 변경 아님. 큰 글자에서 행 높이 증가 |
+| ScheduleCard | tint/text, padding.md16, radius.md, gap.sm8 | “다음 배출 요일”, 요일·시간·note 순. note는 출처 접기 안으로 숨기지 않음 |
+| WeekSelector | 7개, 본문350에서 gap.xxs2, 각(350−12)/7≈48.3×52 | 오늘은 “오늘” 표시, 선택은 checked/selected. 320폭이면4+3줄,44 미만 금지. 선택 요일은 오늘 API 필드와 별개 |
+| SourceDisclosure | minH48, icon20, caption12/18, gap.sm8 | 펼침 label/state. 각 링크 최소48, 제목·자료 기준·공식 홈페이지 링크 여부 원문. 링크 실패는 페이지 외부 연결 실패 안내 |
+| Input | minH52, padding.input14, radius.button, body16/24, border1 | 항상 보이는 label. focus3, error 선 error+필드 바로 아래 설명. placeholder=colors.placeholder. 비활성 공통 규칙 |
+| BottomTabs | 홈/찍기/물어보기/설정 4개, min70+safeBottom | 아이콘24+navigation12/18. 현재 탭 selected, active primary. 비활성 단순 opacity 없음. 카메라는 전체화면에서 탭 숨김 |
+
+## API 필드와 신뢰 표시
+
+| 데이터 | 표시 규칙 |
 |---|---|
-| item_key | 요청 식별에 사용. null이면 unknown 상태. 사용자에게 영문 키를 노출하지 않기 |
-| item_name | 결과 제목. null이면 “품목을 찾지 못했어요”. 빈 이름으로 카드를 확정하지 않기 |
-| category | 아이콘+원문 이름. null이면 후보 분류를 새로 만들지 않기 |
-| answer | 첫 안내 문장. Markdown/채팅 말풍선 대신 본문으로 표시 |
-| steps | 배열 순서 그대로 번호 목록. 전체 원문 유지. 비어 있으면 빈 번호를 만들지 않기 |
-| next_days | “다음 배출 요일”. 날짜·시간대 추론 없음. []이면 “배출 요일 확인 필요” |
-| time | 원문 시간. null이면 “배출 시간 확인 필요”. 품목 일정이 없다는 이유로 시간을 숨겨 의미를 잃지 않기 |
-| note | 있을 때 일정 바로 아래에 원문 표시. null·미제공은 자리 제거 |
-| confident | false이면 상단 아이콘+경고+“후보” 표현. 품목 미상과 품목 후보 상태를 구별 |
-| follow_up | null이면 질문 블록 숨김. 존재하면 question 원문과 예/아니오, key는 요청 상태에 사용 |
-| sources | title·url·updated 모두 사용. updated는 “자료 기준” 표기, 실제 확인일로 재해석 금지. []이면 “출처 확인이 필요해요” |
+| item_key / item_name / category | null이면 unknown. 영문 키 노출·가짜 카테고리 생성 금지. 제목 원문 전체 줄바꿈 |
+| answer / steps | 본문과 번호 체크리스트. 전체 원문, 배열 순서 유지. Markdown 말풍선 없음. 빈 steps에 번호 생성 금지 |
+| next_days / time | “다음 배출 요일”로 표시, 날짜·D-day·내일 계산 금지. [] → “배출 요일 확인 필요”, null → “배출 시간 확인 필요” |
+| note | 결과는 요일·시간 바로 아래, 홈은 주간 표 바로 아래. null/미제공이면 제거 |
+| confident | false+item_key 존재면 “품목 후보”+경고. 클릭만으로 true 금지. 후보 일정은 “이 품목이 맞다면”과 함께 표시 |
+| follow_up | null이면 질문 행동 제거. 있으면 question 원문+예/아니오 Sheet. key는 내부 요청용. false도 누적 상태에 유지 |
+| sources | 제목·URL·updated 원문, updated 레이블 “자료 기준”. []이면 “출처 확인이 필요해요”. 확인일로 바꾸지 않음 |
+| today / today_categories / week | 서버 today가 오늘. 선택 요일은 독립 상태. 빈 목록으로 배출 금지 추론 금지. 많으면 앞2+“외 N종”와 전체목록 Sheet |
 
-카테고리 이름 12개는 API와 정확히 같다: 투명페트 / 플라스틱 / 종이 / 종이팩 / 캔·고철 / 유리병 / 비닐 / 스티로폼 / 일반쓰레기 / 음식물 / 전용수거 / 대형폐기물. D7 `icons/manifest.json`의 대응을 쓴다. 한 색을 공유해도 아이콘·글자로 구분할 수 있어야 한다.
+카테고리 정확한 이름12개: 투명페트 / 플라스틱 / 종이 / 종이팩 / 캔·고철 / 유리병 / 비닐 / 스티로폼 / 일반쓰레기 / 음식물 / 전용수거 / 대형폐기물. SVG 대응은 `icons/manifest.json`, 최종 앱 복사본은 D3에서 제공한다.
 
-## 홈 API 필드 대응
+새 사진/텍스트 질문이면 이전 ItemState 초기화, 되묻기는 has_label/has_contents/is_dirty/is_coated 중 서버 key에 true/false 누적. followup 실패는 기존 결과와 선택 답을 유지하고 질문 영역에 재시도. 지역 변경 시 이전 지역 결과를 새 지역처럼 보여주지 않는다. API가 반환하기 전 예시 결과를 실제 안내로 노출하지 않는다. Mock이면 “예시 데이터 · 실제 배출 안내가 아니에요”를 홈·결과에 보인다.
 
-`ScheduleResponse.today`를 오늘 요일로, `today_categories`를 오늘 목록으로, `week`를 주간 목록으로 표시한다. 카테고리가 많으면 “외 6종”처럼 개수를 보여 주고 48px “전체 품목 보기”에서 전부 읽을 수 있게 한다. `time`은 현재 지역 기준 시간, `note`는 **주간 표 바로 아래**, `sources`는 마지막 출처 행이다.
+## 모션·접근성
 
-`today_categories=[]`는 그 자체로 명시적 금지 사유를 담지 않는다. “안내할 품목이 없어요. 동네 안내를 확인해 주세요.”로 표시하고 임의 요일을 추가하지 않는다. 디자인 데모의 관악구 토요일 배출 금지는 researcher가 확인한 해당 지역 데이터에 한정된다. 다른 지역에서 같은 규칙으로 추론하지 않는다.
+기본 곡선 `motion.easing.standard`=[0.2,0,0,1], 진입 enter=[0.16,1,0.3,1], 퇴장 exit=[0.4,0,1,1], 스캔 linear=[0,0,1,1]. 화면200ms, 카드260ms+Y16→0, 요소별 지연40ms 최대3개. 실제 결과 도착과 동시에 진입하며 애니메이션을 위해 대기시키지 않는다. reduced motion은 이동·반복·scale을 0ms로 끄고 텍스트·최종 레이아웃만 유지. 설정 테마 전환180ms 색 전환, 레이아웃 유지.
 
-## 예/아니오와 상태의 의미
+장식 SVG는 접근성 읽기 제외. 버튼·출처·요일·체크리스트는 label/role/state 제공. 결과 완료는 제목, 오류는 오류 제목으로 포커스 이동하고 재시도 중 화면 전체가 반복 읽히지 않게 한다. 글자200%·320폭에서 줄바꿈, 세로 스크롤, 클릭44 이상을 지킨다. 입력 제출 CTA는 키보드 위에서 접근 가능해야 한다.
 
-| key | 질문 예시 | 예 | 아니오 |
-|---|---|---|---|
-| has_label | 라벨이나 스티커가 아직 붙어 있나요? | true | false |
-| has_contents | 안에 내용물이 남아 있나요? | true | false |
-| is_dirty | 음식물이나 기름이 묻어 있나요? | true | false |
-| is_coated | 비닐이나 은박으로 코팅된 종이인가요? | true | false |
+## 검증 범위
 
-질문은 서버의 `follow_up.question`을 사용한다. 앞서 답한 키를 누적해 `/ask/followup`에 보낸다. `false`도 답한 값이므로 삭제하지 않는다. 새 사진·질문이면 이전 ItemState 초기화. 되묻기 실패 시 기존 결과와 입력 답을 보존하고 해당 블록에서 재시도한다. 빠른 연속 누름으로 같은 요청이 중복되지 않게 처리 중 버튼을 비활성화한다.
-
-## 화면 전환과 예외
-
-첫 실행 동네 선택 → 홈 → 촬영 또는 텍스트 질문 → 결과 → 필요한 경우 되묻기 → 갱신 결과. 목록이 비어 있으면 지역 의존 요청을 시작하지 않는다. 지역을 바꾸면 기존 지역 결과를 새 지역 안내처럼 표시하지 않는다.
-
-로딩·unknown·확신 낮음·통신 오류·빈 동네는 [states.md](states.md)를 따른다. 로딩 중 고정 “3초 남음”이나 임의 퍼센트는 표시하지 않는다. API 지연과 인식 실패를 같은 오류로 묶지 않는다. 예시 데이터는 홈과 결과 모두 “예시 데이터 · 실제 배출 안내가 아니에요”라고 표시한다.
-
-## 접근성·작은 화면·동작
-
-- top/bottom safe area는 기기에서 읽는다. tokens의 safeAreaPreview 값은 캡처용 참고치다.
-- 큰 글자 허용, 제목·버튼·절차 줄바꿈, ScrollView 바닥 여백으로 고정 탭과 키보드에 가리지 않기. 320px에서는 요일 선택을 4+3줄로 구성 가능.
-- 카테고리·상태·선택의 의미는 글자와 접근성 state로 함께 제공한다. 장식 사물 SVG는 스크린리더에서 숨긴다.
-- 결과 갱신은 제목 또는 새 질문으로 접근성 포커스를 옮긴다. 오류 메시지는 변경 시 알린다. 출처 링크는 각각 독립 접근 가능하게 한다.
-- 기본 누름100ms, 화면 전환200ms. reduced-motion이면 회전·전환 정지, 상태 문구만 유지한다.
-- 라이트 테마만 설계했다. 기기 다크 모드에서 이 색을 자동 반전하지 않는다. 다크 테마가 필요하면 별도 대비 검증이 필요하다.
-
-## 검증과 남은 범위
-
-HTML·PNG 검증은 [verification.md](verification.md). 본문·보조·주 버튼 대비 각각10.57/5.89/8.00:1. 실제 Expo 레이아웃, Android 글자 확대·TalkBack·키보드·카메라·네트워크는 coder의 별도 확인 범위다. 이 문서는 앱 전체의 접근성 검증 완료를 뜻하지 않는다.
+색 대비 계산은 [D1 검증](verification-d1.md). 스펙은 앱의 TalkBack·실기기 대비/키보드/카메라 검증을 대신하지 않는다. D4에서 구현과 비교하며 실제 APK는 coder/lead 검증 범위다.
