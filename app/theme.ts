@@ -79,6 +79,7 @@ export const space = {
   "xxs": 2,
   "chipGap": 6,
   "chipX": 10,
+  "input": 14,
   "chipY": 5,
   "smPlus": 12,
   "md": 16,
@@ -170,6 +171,10 @@ export const typography = {
 } as const;
 
 export const sizes = {
+  "stepBadge": 28,
+  "sheetHandleWidth": 40,
+  "sheetHandleHeight": 4,
+  "stateIcon": 48,
   "cameraFrameWidth": 286,
   "cameraFrameHeight": 344,
   "shutter": 80,
