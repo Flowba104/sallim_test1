@@ -6,7 +6,7 @@ const KEY = "theme_pref";
 
 // Appearance.setColorScheme을 쓰면 useColorScheme()을 쓰는 모든 화면이 같이 바뀐다(구조·스크롤·입력 유지).
 export function applyThemePref(p: ThemePref) {
-  Appearance.setColorScheme(p === "system" ? "unspecified" : p);
+  try { Appearance.setColorScheme(p === "system" ? "unspecified" : p); } catch { /* 웹 등 미지원 환경은 시스템 설정을 따른다 */ }
 }
 
 export async function loadThemePref(): Promise<ThemePref> {
