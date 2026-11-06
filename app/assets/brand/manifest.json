@@ -1,0 +1,395 @@
+{
+  "version": "2.0.0",
+  "date": "2026-11-06",
+  "design": "A 살림 노트",
+  "categoryManifest": "categories/manifest.json",
+  "assets": [
+    {
+      "file": "README.md",
+      "bytes": 3796,
+      "sha256": "0ffc620e11864b2eb96755bd7733fc61b5852c19812da8953352eb86b1dd4130"
+    },
+    {
+      "file": "adaptive-background.png",
+      "bytes": 5237,
+      "sha256": "8c00e3c497d811b8b194c28b568caf3d0af264b77743897f3f170b986ea573c7"
+    },
+    {
+      "file": "adaptive-background.svg",
+      "bytes": 142,
+      "sha256": "b154e839dbf7eb033c015a4cb0ac11906850d972db9f41a25a272a3062f8a1f9"
+    },
+    {
+      "file": "adaptive-foreground.png",
+      "bytes": 14698,
+      "sha256": "32784acb9c5795605bda107d9902f11e2241a239ff3ff54fd8c1150f8ba51c0b"
+    },
+    {
+      "file": "adaptive-foreground.svg",
+      "bytes": 512,
+      "sha256": "1636de30f010362d0f3add076008db44ff784d1dfb276fb4fc10d375bb67f942"
+    },
+    {
+      "file": "adaptive-monochrome.png",
+      "bytes": 12347,
+      "sha256": "857f132e2392c5427ddc0e9a96e37469d8b66d6e0ef3923abd9ba709735bae65"
+    },
+    {
+      "file": "adaptive-monochrome.svg",
+      "bytes": 552,
+      "sha256": "56c2854500e697c8422cff77953a775da97279d5828fdf618300368fad023c72"
+    },
+    {
+      "file": "app-icon.png",
+      "bytes": 14887,
+      "sha256": "a68046c8ac1f54d2d88004e7f33ceea4eef191a4fbce48da8166acf5bf4c0bb0"
+    },
+    {
+      "file": "app-icon.svg",
+      "bytes": 655,
+      "sha256": "cd45915f19366bccafca3545ef99f89412360c551a5b5e32e2bb818b132b6390"
+    },
+    {
+      "file": "categories/bulky-waste.svg",
+      "bytes": 346,
+      "sha256": "6ac1f7b5a81e965412991e707ef76dcc4e5e42a296f16e8ed9798c37dfa60d5f"
+    },
+    {
+      "file": "categories/collection-only.svg",
+      "bytes": 378,
+      "sha256": "b3379fe5d81eb45844d5bd8b0898852bffac98c5642f1c452534685ce359fe04"
+    },
+    {
+      "file": "categories/food-waste.svg",
+      "bytes": 366,
+      "sha256": "6bf8ada6effc98fb6e9528286fbfdafce249719e2be4ce13c42da9ede374ca0c"
+    },
+    {
+      "file": "categories/general-waste.svg",
+      "bytes": 385,
+      "sha256": "be2d0dfc25cf19d646a9d507b6ff1be667e76d838c216261f2f43caf6e6b4fa0"
+    },
+    {
+      "file": "categories/glass-bottle.svg",
+      "bytes": 364,
+      "sha256": "fc54bd67cde13395f34a74e3fba82b245201ea5218eec14dab9110707c3c48e2"
+    },
+    {
+      "file": "categories/metal.svg",
+      "bytes": 360,
+      "sha256": "2a0112ef5bcc1bbb29a61f286d76239e459559dc897d990e9c59a91cbbe60143"
+    },
+    {
+      "file": "categories/paper-carton.svg",
+      "bytes": 359,
+      "sha256": "d48e6e9dca0d558f480dcd75bcaeceb78e5d515119c7eb68602bb2431868a516"
+    },
+    {
+      "file": "categories/paper.svg",
+      "bytes": 318,
+      "sha256": "4ab23073a7dc1d18b5f0cf6b7f26232f80ee3d05695f53999d30b92096da5749"
+    },
+    {
+      "file": "categories/pet-bottle-clear.svg",
+      "bytes": 382,
+      "sha256": "584d73b972f97c6b09726073e403f272de4da87a4690e6e3015d1c9697a4a2d8"
+    },
+    {
+      "file": "categories/plastic.svg",
+      "bytes": 326,
+      "sha256": "566e6f2e504902f55099f6564f7ffddff6137d5404b49218c9d0cd902c2d0aaa"
+    },
+    {
+      "file": "categories/styrofoam.svg",
+      "bytes": 483,
+      "sha256": "eddf797cd9ec75d905e03b15e63ca87fbe270b2c5278a5d062c37e6a892ccf35"
+    },
+    {
+      "file": "categories/vinyl.svg",
+      "bytes": 326,
+      "sha256": "b856136f822256356bd58a02fc91a1ec08047c4a617ede4e06431e602c0de57c"
+    },
+    {
+      "file": "mark.png",
+      "bytes": 14698,
+      "sha256": "32784acb9c5795605bda107d9902f11e2241a239ff3ff54fd8c1150f8ba51c0b"
+    },
+    {
+      "file": "mark.svg",
+      "bytes": 550,
+      "sha256": "81dbf3d88bfd4775357592f5b0d6ce7b621ad6236f5280623692270f72445b3c"
+    },
+    {
+      "file": "onboarding-method-dark.png",
+      "bytes": 9853,
+      "sha256": "5cef6ddcd7c2c382f1d6ad7635e744bd52782107933078fabf2f2aca1cfe7874"
+    },
+    {
+      "file": "onboarding-method-dark.svg",
+      "bytes": 956,
+      "sha256": "eb9c0bc31cee5991e486463da033fd64d3b67d4b22a150d44f4a7016d5995a2c"
+    },
+    {
+      "file": "onboarding-method.png",
+      "bytes": 9624,
+      "sha256": "0581b713e171f880d3c80d6323bcc067506e71e74c3d1fa896840ba3993dd34c"
+    },
+    {
+      "file": "onboarding-method.svg",
+      "bytes": 956,
+      "sha256": "2d363ce6fe0f877b63755e01a72bfca28a02093b09b72aa004bb2b425c2161d4"
+    },
+    {
+      "file": "onboarding-photo-dark.png",
+      "bytes": 8950,
+      "sha256": "8bc326334a0404b1d7caf4a72879ffac34f36cd7deb85a1d3e8f0e785c4d48a1"
+    },
+    {
+      "file": "onboarding-photo-dark.svg",
+      "bytes": 880,
+      "sha256": "98e4e34fbc18731678b074710c9f507206ac99e1e72518788dbb593a1864221c"
+    },
+    {
+      "file": "onboarding-photo.png",
+      "bytes": 8650,
+      "sha256": "bc98ce26a65f9b462c8c4b84da890bbc0d981dcea245a4c414c515328c09488f"
+    },
+    {
+      "file": "onboarding-photo.svg",
+      "bytes": 880,
+      "sha256": "cf7022913dc359326023bf3b152a36abba65a2004e5c775a3e2b295804b9615f"
+    },
+    {
+      "file": "onboarding-region-dark.png",
+      "bytes": 10660,
+      "sha256": "768cbe4c2537a04b9c175b1305063e0fbebd4b887a9c0461fc668b26e8196f11"
+    },
+    {
+      "file": "onboarding-region-dark.svg",
+      "bytes": 1099,
+      "sha256": "d69550443af8eed7235ff6f4ec8c0cbb408386eb6eb9758527fd1ee94da89c26"
+    },
+    {
+      "file": "onboarding-region.png",
+      "bytes": 9949,
+      "sha256": "e031344695bd06a804a2731e09317ae4ee0f1874ebcfea75c38a6b9e59032034"
+    },
+    {
+      "file": "onboarding-region.svg",
+      "bytes": 1099,
+      "sha256": "8fc15a0cd5b8e90a90d00a07439eb31425813ad6e5f48fadcb62db49cc78bf13"
+    },
+    {
+      "file": "splash-dark.png",
+      "bytes": 8202,
+      "sha256": "e18f99ccc653ec08602d00d3edab45fbde646d5563e5ba7d72b46e621b65443f"
+    },
+    {
+      "file": "splash-icon-dark.png",
+      "bytes": 14741,
+      "sha256": "24f9f5488e63fdc0c5faabc0a7e35fe34d626663a41be3f72ec4e404cac829d0"
+    },
+    {
+      "file": "splash-icon-dark.svg",
+      "bytes": 512,
+      "sha256": "ca874beb6813fd77a0c618d173172d68cc8d9798fffcfe84cd253ce8aaff30a7"
+    },
+    {
+      "file": "splash-icon.png",
+      "bytes": 14777,
+      "sha256": "6f9a990ecc787846d0ced6a62994b4acaf2272f51b40cfdbd74944e920a0c10f"
+    },
+    {
+      "file": "splash-icon.svg",
+      "bytes": 512,
+      "sha256": "626d1a8ecf695859f524295b83b4446b67f9678c08b6848ce66e66c2b0d94156"
+    },
+    {
+      "file": "splash.png",
+      "bytes": 8164,
+      "sha256": "a17558807c8f813a6b1a11275e9c4031ed792020de19f4781f823e152b3e9672"
+    }
+  ],
+  "pngVerification": [
+    {
+      "file": "adaptive-background.png",
+      "width": 1024,
+      "height": 1024,
+      "minX": 0,
+      "minY": 0,
+      "maxX": 1023,
+      "maxY": 1023,
+      "transparent": 0,
+      "opaque": 1048576,
+      "maxRadius": 724.0773439350247
+    },
+    {
+      "file": "adaptive-foreground.png",
+      "width": 1024,
+      "height": 1024,
+      "minX": 278,
+      "minY": 264,
+      "maxX": 745,
+      "maxY": 759,
+      "transparent": 829931,
+      "opaque": 217998,
+      "maxRadius": 309.51090449287886
+    },
+    {
+      "file": "adaptive-monochrome.png",
+      "width": 1024,
+      "height": 1024,
+      "minX": 278,
+      "minY": 264,
+      "maxX": 745,
+      "maxY": 759,
+      "transparent": 856152,
+      "opaque": 190977,
+      "maxRadius": 309.51090449287886
+    },
+    {
+      "file": "app-icon.png",
+      "width": 1024,
+      "height": 1024,
+      "minX": 0,
+      "minY": 0,
+      "maxX": 1023,
+      "maxY": 1023,
+      "transparent": 0,
+      "opaque": 1048576,
+      "maxRadius": 724.0773439350247
+    },
+    {
+      "file": "mark.png",
+      "width": 1024,
+      "height": 1024,
+      "minX": 278,
+      "minY": 264,
+      "maxX": 745,
+      "maxY": 759,
+      "transparent": 829931,
+      "opaque": 217998,
+      "maxRadius": 309.51090449287886
+    },
+    {
+      "file": "onboarding-method-dark.png",
+      "width": 350,
+      "height": 240,
+      "minX": 25,
+      "minY": 22,
+      "maxX": 324,
+      "maxY": 229,
+      "transparent": 34549,
+      "opaque": 48569,
+      "maxRadius": 641.5520243908518
+    },
+    {
+      "file": "onboarding-method.png",
+      "width": 350,
+      "height": 240,
+      "minX": 25,
+      "minY": 22,
+      "maxX": 324,
+      "maxY": 229,
+      "transparent": 34549,
+      "opaque": 48569,
+      "maxRadius": 641.5520243908518
+    },
+    {
+      "file": "onboarding-photo-dark.png",
+      "width": 350,
+      "height": 240,
+      "minX": 25,
+      "minY": 22,
+      "maxX": 324,
+      "maxY": 229,
+      "transparent": 34653,
+      "opaque": 48448,
+      "maxRadius": 641.5520243908518
+    },
+    {
+      "file": "onboarding-photo.png",
+      "width": 350,
+      "height": 240,
+      "minX": 25,
+      "minY": 22,
+      "maxX": 324,
+      "maxY": 229,
+      "transparent": 34653,
+      "opaque": 48448,
+      "maxRadius": 641.5520243908518
+    },
+    {
+      "file": "onboarding-region-dark.png",
+      "width": 350,
+      "height": 240,
+      "minX": 25,
+      "minY": 22,
+      "maxX": 324,
+      "maxY": 229,
+      "transparent": 34561,
+      "opaque": 48534,
+      "maxRadius": 641.5520243908518
+    },
+    {
+      "file": "onboarding-region.png",
+      "width": 350,
+      "height": 240,
+      "minX": 25,
+      "minY": 22,
+      "maxX": 324,
+      "maxY": 229,
+      "transparent": 34561,
+      "opaque": 48534,
+      "maxRadius": 641.5520243908518
+    },
+    {
+      "file": "splash-dark.png",
+      "width": 390,
+      "height": 844,
+      "minX": 0,
+      "minY": 0,
+      "maxX": 389,
+      "maxY": 843,
+      "transparent": 0,
+      "opaque": 329160,
+      "maxRadius": 724.0773439350247
+    },
+    {
+      "file": "splash-icon-dark.png",
+      "width": 1024,
+      "height": 1024,
+      "minX": 278,
+      "minY": 264,
+      "maxX": 745,
+      "maxY": 759,
+      "transparent": 829931,
+      "opaque": 217998,
+      "maxRadius": 309.51090449287886
+    },
+    {
+      "file": "splash-icon.png",
+      "width": 1024,
+      "height": 1024,
+      "minX": 278,
+      "minY": 264,
+      "maxX": 745,
+      "maxY": 759,
+      "transparent": 829931,
+      "opaque": 217998,
+      "maxRadius": 309.51090449287886
+    },
+    {
+      "file": "splash.png",
+      "width": 390,
+      "height": 844,
+      "minX": 0,
+      "minY": 0,
+      "maxX": 389,
+      "maxY": 843,
+      "transparent": 0,
+      "opaque": 329160,
+      "maxRadius": 724.0773439350247
+    }
+  ]
+}
