@@ -170,6 +170,10 @@ export const typography = {
 } as const;
 
 export const sizes = {
+  "cameraFrameWidth": 286,
+  "cameraFrameHeight": 344,
+  "shutter": 80,
+  "albumButton": 52,
   "touchMin": 48,
   "touchAbsoluteMin": 44,
   "buttonMinHeight": 52,

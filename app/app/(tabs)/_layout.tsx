@@ -16,7 +16,7 @@ export default function TabsLayout() {
   return (
     <Tabs screenOptions={{ tabBarActiveTintColor: c.primary, tabBarStyle: { backgroundColor: c.surface }, sceneStyle: { backgroundColor: c.bg } }}>
       <Tabs.Screen name="index" options={{ title: "홈" }} />
-      <Tabs.Screen name="capture" options={{ title: "찍기" }} />
+      <Tabs.Screen name="capture" options={{ title: "찍기", tabBarStyle: { display: "none" } }} />
       <Tabs.Screen name="ask" options={{ title: "물어보기" }} />
       <Tabs.Screen name="settings" options={{ title: "설정" }} />
     </Tabs>
