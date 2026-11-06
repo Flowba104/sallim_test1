@@ -7,3 +7,10 @@
 3. **요일·추천 / Chip 크기·선택형태** — 현재 `sizes.touchAbsoluteMin`44와 selected border1/합성 fontWeight를 사용한다. 기대: U1 `components.chip.minHeight`48, selected `border.selected`2, 대응 Pretendard family로 굵기. 요일의 부모폭과 오늘 문구 줄바꿈은 U3 시각 QA에서 별도 확인한다.
 
 라이트/다크 기본색은 tokens v2에 동기화돼 있고, 카테고리 그룹색 및 출처 자료기준은 읽기상 확인했다. 이 기록은 U1 완전통과 판정이 아니다.
+
+## 최종 export 추가 확인
+
+4. **[접근성] 출처·선택 컴포넌트 / expanded·selected 상태** — 웹에 설치된 `react-native-web/dist/modules/createDOMProps/index.js`는 aria-expanded/aria-selected/aria-checked 또는 개별 accessibilityExpanded/Selected/Checked를 읽고 `accessibilityState` 묶음을 처리하지 않는다. 현재 SourceDisclosure와 Chip는 묶음만 전달해 웹에서 펼침·선택상태가 누락될 수 있다. 기대: 출처에 expanded true/false, 선택Chip에 selected/pressed, 지역·테마radio에 checked를 native·web 모두 노출. 색은 `colors.primary/tint`·기존 토큰 유지. 실제 radio 트리에서 checked 누락은 U2/U9 캡처 probe로 확인했다.
+5. **전체 탭 화면 / BottomTabs** — 현재 탭은 라이브러리 기본높이48px로 측정되며 label도 기본스타일이다. 기대: `sizes.tabBarMinHeight`70+실제 bottom inset, `typography.navigation`12/18과 Pretendard-SemiBold, icon24. 터치 절대하한44는 만족하므로 주요정보 오류보다 낮은 우선순위지만 U1 명세·토큰 기준에 맞춘다.
+
+기존1~3 지적은 최신 코드에 ScrollView+insets/100ms press hook/reduced-motion/Chip48·선택선2로 반영됐다. Sheet12품목/320긴질문 닫기는 실제캡처로 확인했다. native TalkBack과 햅틱은 미검증.
