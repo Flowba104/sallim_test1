@@ -10,7 +10,7 @@ export default function Chip({ label, sub, onPress, selected, compact }: { label
   const press = usePressScale();
   return (
     <Animated.View style={press.style}>
-    <Pressable onPressIn={press.onPressIn} onPressOut={press.onPressOut} accessibilityRole="button" accessibilityState={{ selected: !!selected }} onPress={() => { Haptics.selectionAsync().catch(() => {}); onPress?.(); }}
+    <Pressable onPressIn={press.onPressIn} onPressOut={press.onPressOut} accessibilityRole="button" accessibilityState={{ selected: !!selected }} aria-selected={!!selected} onPress={() => { Haptics.selectionAsync().catch(() => {}); onPress?.(); }}
       style={({ pressed }) => ({ minHeight: sizes.touchMin, minWidth: sizes.touchMin, justifyContent: "center", alignItems: "center",
         paddingHorizontal: compact ? space.xs : space.smPlus, borderRadius: radius.pill, borderWidth: selected ? 2 : 1,
         borderColor: selected ? c.primary : c.border,

@@ -4,8 +4,16 @@ import { Appearance } from "react-native";
 export type ThemePref = "system" | "light" | "dark";
 const KEY = "theme_pref";
 
-// Appearance.setColorScheme을 쓰면 useColorScheme()을 쓰는 모든 화면이 같이 바뀐다(구조·스크롤·입력 유지).
+// 네이티브는 Appearance.setColorScheme도 같이 호출(상태바·시스템 UI 일치). 화면 색은 theme.ts useScheme()이 current를 읽는다.
+// 앱 안 선택값 저장소 — 웹에는 Appearance.setColorScheme이 없어 useScheme()(theme.ts)이 이 값을 직접 읽는다.
+let current: ThemePref = "system";
+const listeners = new Set<() => void>();
+export const getThemePref = () => current;
+export const subscribeThemePref = (l: () => void) => { listeners.add(l); return () => { listeners.delete(l); }; };
+
 export function applyThemePref(p: ThemePref) {
+  current = p;
+  listeners.forEach((l) => l());
   try { Appearance.setColorScheme(p === "system" ? "unspecified" : p); } catch { /* 웹 등 미지원 환경은 시스템 설정을 따른다 */ }
 }
 

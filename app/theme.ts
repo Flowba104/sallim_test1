@@ -1,4 +1,13 @@
+import { useSyncExternalStore } from "react";
 import { useColorScheme } from "react-native";
+import { getThemePref, subscribeThemePref } from "./lib/themePref";
+
+// 설정의 화면 모드(시스템/라이트/다크)와 기기 모드를 합친 실제 적용 모드
+export function useScheme(): "light" | "dark" {
+  const sys = useColorScheme();
+  const pref = useSyncExternalStore(subscribeThemePref, getThemePref);
+  return pref === "system" ? (sys === "dark" ? "dark" : "light") : pref;
+}
 // 원본: docs/design/tokens.json v1.0.0-draft (A 살림 노트, 추천안·오너 선택 전). 값 복사본 — 토큰이 바뀌면 같이 갱신.
 export const lightColors = {
   "bg": "#F7F3E8",
@@ -69,7 +78,7 @@ export const darkColors: Record<keyof typeof lightColors, string> = {
 export const colors = lightColors;
 
 export function useColors(): Record<keyof typeof lightColors, string> {
-  return useColorScheme() === "dark" ? darkColors : lightColors;
+  return useScheme() === "dark" ? darkColors : lightColors;
 }
 
 export const space = {
@@ -234,7 +243,7 @@ export const categoryGroups: Record<string, readonly string[]> = {"recycle": ["�
 export const categoryColors = {"light": {"recycle": {"bg": "#E8ECDC", "text": "#2E5943"}, "general": {"bg": "#EDE7DC", "text": "#534B3C"}, "food": {"bg": "#F8E8D8", "text": "#70452A"}, "special": {"bg": "#E9E6F0", "text": "#55446D"}}, "dark": {"recycle": {"bg": "#304838", "text": "#ACD1B2"}, "general": {"bg": "#3E3C31", "text": "#DDD2BA"}, "food": {"bg": "#483628", "text": "#F1C399"}, "special": {"bg": "#3B3348", "text": "#D4C4EB"}}} as const;
 
 export function useCategoryColors(category: string | null) {
-  const mode = useColorScheme() === "dark" ? "dark" : "light";
+  const mode = useScheme();
   const g = Object.keys(categoryGroups).find((k) => category && categoryGroups[k].includes(category)) as keyof typeof categoryColors.light | undefined;
   return categoryColors[mode][g ?? "recycle"];
 }

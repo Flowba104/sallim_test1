@@ -69,7 +69,7 @@ export default function RegionPicker({ onDone }: { onDone: () => void }) {
         {regions?.map((r) => {
           const on = r.id === sel;
           return (
-            <Pressable key={r.id} accessibilityRole="radio" accessibilityLabel={r.name} accessibilityState={{ selected: on }}
+            <Pressable key={r.id} accessibilityRole="radio" accessibilityLabel={r.name} accessibilityState={{ selected: on, checked: on }} aria-checked={on}
               onPress={() => { setSel(r.id); setSaveErr(false); Haptics.selectionAsync().catch(() => {}); }}
               style={({ pressed }) => ({ minHeight: 80, justifyContent: "center", padding: space.md, gap: space.xs, borderRadius: radius.md,
                 borderWidth: on ? 2 : 1, borderColor: on ? c.primary : c.border,

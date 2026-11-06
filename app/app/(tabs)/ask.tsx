@@ -1,5 +1,5 @@
 import { ComponentRef, useEffect, useRef, useState } from "react";
-import { ScrollView, Text, TextInput, View, useColorScheme } from "react-native";
+import { ScrollView, Text, TextInput, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
@@ -14,11 +14,11 @@ import { t } from "../../lib/copy";
 import { addRecent } from "../../lib/recent";
 import { SUGGESTIONS } from "../../lib/suggestions";
 import { useRegion } from "../../lib/useRegion";
-import { motion, radius, sizes, space, typography, useColors } from "../../theme";
+import { useScheme, motion, radius, sizes, space, typography, useColors } from "../../theme";
 
 export default function Ask() {
   const c = useColors();
-  const dark = useColorScheme() === "dark";
+  const dark = useScheme() === "dark";
   const router = useRouter();
   const params = useLocalSearchParams<{ q?: string }>();
   const regionId = useRegion();

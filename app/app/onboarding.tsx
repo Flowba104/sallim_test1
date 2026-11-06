@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Image, Pressable, useColorScheme, ScrollView, Text, View } from "react-native";
+import { Image, Pressable, ScrollView, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInRight, FadeInLeft } from "react-native-reanimated";
 import Button from "../components/Button";
-import { motion, radius, sizes, space, typography, useColors } from "../theme";
+import { useScheme, motion, radius, sizes, space, typography, useColors } from "../theme";
 import { t } from "../lib/copy";
 
 const ART = {
@@ -16,7 +16,7 @@ const PAGES = [{ key: "photo" }, { key: "method" }, { key: "region" }] as const;
 
 export default function Onboarding() {
   const c = useColors();
-  const dark = useColorScheme() === "dark";
+  const dark = useScheme() === "dark";
   const router = useRouter();
   const [i, setI] = useState(0);
   const [back, setBack] = useState(false);

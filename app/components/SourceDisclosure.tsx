@@ -9,7 +9,7 @@ export default function SourceDisclosure({ sources, label = "출처 확인하기
   const [open, setOpen] = useState(false);
   return (
     <View>
-      <Pressable accessibilityRole="button" accessibilityState={{ expanded: open }} onPress={() => setOpen((o) => !o)}
+      <Pressable accessibilityRole="button" accessibilityState={{ expanded: open }} aria-expanded={open} onPress={() => setOpen((o) => !o)}
         style={{ minHeight: sizes.touchMin, flexDirection: "row", alignItems: "center", gap: space.sm }}>
         <Text style={{ ...typography.label, color: c.subtext }}>{open ? "▾" : "▸"} {label}</Text>
       </Pressable>

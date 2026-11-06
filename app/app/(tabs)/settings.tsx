@@ -78,7 +78,7 @@ export default function Settings() {
           {THEMES.map((p) => {
             const on = theme === p;
             return (
-              <Pressable key={p} accessibilityRole="radio" accessibilityState={{ selected: on }} accessibilityLabel={t(`settings.theme.${p}`)} onPress={() => pick(p)}
+              <Pressable key={p} accessibilityRole="radio" accessibilityState={{ selected: on, checked: on }} aria-checked={on} accessibilityLabel={t(`settings.theme.${p}`)} onPress={() => pick(p)}
                 style={({ pressed }) => ({ minHeight: 56, flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: space.md,
                   borderRadius: radius.button, borderWidth: on ? 2 : 1, borderColor: on ? c.primary : c.border,
                   backgroundColor: on ? c.tint : pressed ? c.surfacePressed : c.surface })}>

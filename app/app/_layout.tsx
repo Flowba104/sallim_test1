@@ -3,11 +3,12 @@ import { useFonts } from "expo-font";
 import { useEffect } from "react";
 import { ReducedMotionConfig, ReduceMotion } from "react-native-reanimated";
 import { StatusBar } from "expo-status-bar";
-import { useColors, motion } from "../theme";
+import { useColors, useScheme, motion } from "../theme";
 import { applyThemePref, loadThemePref } from "../lib/themePref";
 
 export default function RootLayout() {
   const c = useColors();
+  const scheme = useScheme();
   const [loaded, error] = useFonts({
     "Pretendard-Regular": require("../assets/fonts/Pretendard-Regular.otf"),
     "Pretendard-SemiBold": require("../assets/fonts/Pretendard-SemiBold.otf"),
@@ -19,7 +20,7 @@ export default function RootLayout() {
   return (
     <>
       <ReducedMotionConfig mode={ReduceMotion.System} />
-      <StatusBar style="auto" />
+      <StatusBar style={scheme === "dark" ? "light" : "dark"} />
       <Stack screenOptions={{ headerShown: false, animation: "slide_from_right", animationDuration: motion.screenMs, contentStyle: { backgroundColor: c.bg } }} />
     </>
   );
