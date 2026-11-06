@@ -7,3 +7,6 @@ scripts/agent-team/
 
 # python
 __pycache__/
+
+# secrets (.env.example만 올림)
+.env
