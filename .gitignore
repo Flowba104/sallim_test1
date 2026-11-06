@@ -4,3 +4,6 @@
 .agent-mail-*/
 scripts/agent-team/
 .github/hooks/
+
+# python
+__pycache__/
