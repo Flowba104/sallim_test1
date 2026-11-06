@@ -169,7 +169,6 @@ export default function Home() {
             <Text style={{ ...typography.body, color: c.text }}>{x}</Text>
           </View>
         ))}
-        <Button variant="secondary" label="닫기" haptic={false} onPress={() => setSheet(false)} />
       </Sheet>
     </SafeAreaView>
   );

@@ -120,7 +120,6 @@ export default function ResultCard({ result: r, regionId, onChange, onRetake }: 
             <View style={{ flexDirection: "row", alignItems: "center", gap: space.sm }}>
               <CategoryIcon category={r.category} size={sizes.iconLarge} color={c.primary} />
               <Text style={{ ...typography.bodyStrong, color: c.text, flex: 1 }}>{r.item_name}</Text>
-              <Button variant="secondary" label={t("common.close")} haptic={false} onPress={() => setOpen(false)} />
             </View>
             <Text style={{ ...typography.caption, color: c.subtext }}>{t("result.followUp.sheetTitle")}</Text>
             <Text accessibilityRole="header" style={{ ...typography.resultTitle, color: c.text }}>{r.follow_up.question}</Text>
