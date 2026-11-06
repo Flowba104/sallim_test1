@@ -20,7 +20,7 @@
 - 결과 key 대소문자: `result.followUp.*`가 정식, `result.nextDays.title/unknown`, `result.time.unknown`, `result.lowConfidence.*`, `result.unknown.*`.
 - 촬영은 `capture.header`, `capture.button.album`, `capture.scanning.title/body/cancel` 사용.
 - 검색은 `ask.title`, `ask.placeholder`, `ask.submit`, `ask.chips.title/subtitle`. 칩은 입력을 채우고 CTA가 요청한다. 카피가 즉시 요청처럼 읽히면 researcher와 정렬한다.
-- 추가 제안 키(capture.privacy/slow, result.followUp.open, ask.input.label/hint/errorEmpty, ask.chips.more, settings.theme.saveError/contact.unavailable)는 MSG-0032로 researcher에 전달했다. 존재하지 않는 키를 그대로 사용자에게 노출하지 않는다.
+- 추가 키(capture.privacy/slow, result.followUp.open, ask.input.label/hint/errorEmpty, ask.chips.more, settings.theme.saveError/contact.unavailable)는 researcher MSG-0072에서 최종 반영 확인했다. 추천20개는 `docs/research/faq-chips.md`를 사용한다. 존재하지 않는 키를 그대로 사용자에게 노출하지 않는다.
 
 ## 공통 QA 축
 
