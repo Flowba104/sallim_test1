@@ -39,17 +39,3 @@ yarn-error.*
 # generated native folders
 /ios
 /android
-
-# python
-server/.venv/
-__pycache__/
-.pytest_cache/
-
-# secrets
-.env
-!.env.example
-
-# node / expo
-node_modules/
-app/dist/
-app/.expo/

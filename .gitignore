@@ -1,0 +1,6 @@
+
+# agent team
+.agent-mail/
+.agent-mail-*/
+scripts/agent-team/
+.github/hooks/
