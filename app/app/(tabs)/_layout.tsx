@@ -1,5 +1,6 @@
 import { Tabs, useRouter } from "expo-router";
 import { useEffect } from "react";
+import TabIcon from "../../components/TabIcon";
 import { useColors } from "../../theme";
 import { getRegionId, isOnboarded } from "../../lib/region";
 
@@ -14,11 +15,11 @@ export default function TabsLayout() {
     })();
   }, [router]);
   return (
-    <Tabs screenOptions={{ headerShown: false, animation: "fade",  tabBarActiveTintColor: c.primary, tabBarStyle: { backgroundColor: c.surface }, sceneStyle: { backgroundColor: c.bg } }}>
-      <Tabs.Screen name="index" options={{ title: "홈" }} />
-      <Tabs.Screen name="capture" options={{ title: "찍기", tabBarStyle: { display: "none" } }} />
-      <Tabs.Screen name="ask" options={{ title: "물어보기" }} />
-      <Tabs.Screen name="settings" options={{ title: "설정" }} />
+    <Tabs screenOptions={{ headerShown: false, animation: "fade",  tabBarActiveTintColor: c.primary, tabBarInactiveTintColor: c.subtext, tabBarStyle: { backgroundColor: c.surface }, sceneStyle: { backgroundColor: c.bg } }}>
+      <Tabs.Screen name="index" options={{ tabBarIcon: ({ color }) => <TabIcon name="home" color={color} />, title: "홈" }} />
+      <Tabs.Screen name="capture" options={{ tabBarIcon: ({ color }) => <TabIcon name="capture" color={color} />, title: "찍기", tabBarStyle: { display: "none" } }} />
+      <Tabs.Screen name="ask" options={{ tabBarIcon: ({ color }) => <TabIcon name="ask" color={color} />, title: "물어보기" }} />
+      <Tabs.Screen name="settings" options={{ tabBarIcon: ({ color }) => <TabIcon name="settings" color={color} />, title: "설정" }} />
     </Tabs>
   );
 }

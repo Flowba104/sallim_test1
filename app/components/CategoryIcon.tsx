@@ -1,7 +1,8 @@
 import { SvgXml } from "react-native-svg";
 import { colors } from "../theme";
 
-// 원본: docs/design/icons/*.svg (24×24, stroke 2, 자체 제작). 장식용 — 항상 카테고리 글자와 함께 쓴다.
+// 장식용 — 항상 카테고리 글자와 함께 쓴다.
+// 원본: app/assets/brand/categories/*.svg (24×24, stroke 2 currentColor, designer D3 v2)
 const BODY: Record<string, string> = {
   "투명페트": "<path d=\"M9 2h6v4l3 4v10a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V10l3-4ZM9 6h6M6 12h12M6 17h12\"/>",
   "플라스틱": "<path d=\"M5 7h14l-2 14H7ZM4 4h16M8 11h8M9 16h6\"/>",

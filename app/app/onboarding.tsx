@@ -1,22 +1,22 @@
 import { useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { Image, Pressable, useColorScheme, ScrollView, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInRight, FadeInLeft } from "react-native-reanimated";
 import Button from "../components/Button";
-import CategoryIcon from "../components/CategoryIcon";
 import { motion, radius, sizes, space, typography, useColors } from "../theme";
 import { t } from "../lib/copy";
 
-// D3 일러스트(app/assets/brand/onboarding-*.svg)가 오기 전까지 tint 면 + 카테고리 아이콘
-const PAGES = [
-  { key: "photo", icon: "투명페트" },
-  { key: "method", icon: "종이" },
-  { key: "region", icon: "일반쓰레기" },
-];
+const ART = {
+  photo: { light: require("../assets/brand/onboarding-photo.png"), dark: require("../assets/brand/onboarding-photo-dark.png") },
+  method: { light: require("../assets/brand/onboarding-method.png"), dark: require("../assets/brand/onboarding-method-dark.png") },
+  region: { light: require("../assets/brand/onboarding-region.png"), dark: require("../assets/brand/onboarding-region-dark.png") },
+};
+const PAGES = [{ key: "photo" }, { key: "method" }, { key: "region" }] as const;
 
 export default function Onboarding() {
   const c = useColors();
+  const dark = useColorScheme() === "dark";
   const router = useRouter();
   const [i, setI] = useState(0);
   const [back, setBack] = useState(false);
@@ -36,9 +36,7 @@ export default function Onboarding() {
       </View>
       <ScrollView contentContainerStyle={{ flexGrow: 1, paddingHorizontal: space.page, paddingTop: space.xl, gap: space.md }}>
         <Animated.View key={i} entering={enter} style={{ gap: space.md }}>
-          <View style={{ height: 240, borderRadius: radius.lg, backgroundColor: c.tint, alignItems: "center", justifyContent: "center" }}>
-            <CategoryIcon category={p.icon} size={96} color={c.primary} />
-          </View>
+          <Image source={ART[p.key][dark ? "dark" : "light"]} accessibilityElementsHidden importantForAccessibility="no" resizeMode="contain" style={{ width: "100%", aspectRatio: 350 / 240 }} />
           <Text accessibilityRole="header" style={{ ...typography.heading, color: c.text, marginTop: space.md }}>{t(`onboarding.${p.key}.title`)}</Text>
           <Text style={{ ...typography.body, color: c.subtext }}>{t(`onboarding.${p.key}.body`)}</Text>
         </Animated.View>

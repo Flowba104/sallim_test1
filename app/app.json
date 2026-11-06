@@ -4,15 +4,17 @@
     "slug": "sallim",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/brand/app-icon.png",
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#2E5943",
-        "foregroundImage": "./assets/android-icon-foreground.png"
+        "foregroundImage": "./assets/brand/adaptive-foreground.png",
+        "backgroundImage": "./assets/brand/adaptive-background.png",
+        "monochromeImage": "./assets/brand/adaptive-monochrome.png",
+        "backgroundColor": "#2E5943"
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.sallim.app"
@@ -39,9 +41,13 @@
       ]
     ],
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/brand/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#2E5943"
+      "backgroundColor": "#F7F3E8",
+      "dark": {
+        "image": "./assets/brand/splash-icon-dark.png",
+        "backgroundColor": "#15231C"
+      }
     }
   }
 }
