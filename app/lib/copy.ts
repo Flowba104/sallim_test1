@@ -171,7 +171,7 @@ export const copy: Record<string, string> = {
   "settings.disclaimer.title": "배출 시 유의사항",
   "settings.disclaimer.body": "동이나 아파트 단지마다 세부 배출 요일과 시간이 다를 수 있어요. 단지 안내문이나 구청 공지를 함께 확인해 주세요.",
   "settings.privacy.title": "개인정보 보호 안내",
-  "settings.privacy.body": "촬영한 사진은 품목 확인 후 바로 지워지며 서버에 저장하지 않아요. 상세 주소나 위치 권한도 받지 않아요.",
+  "settings.privacy.body": "사진은 품목을 확인하는 동안에만 쓰고 서버에 저장하지 않아요. 정확한 분석을 위해 AI 분석 서비스로 전송될 수 있어요. 상세 주소나 위치 권한은 받지 않아요.",
   "settings.version.title": "앱 버전",
   "settings.contact.title": "문의 및 정보 수정 제안",
   "settings.contact.body": "우리 동네 배출 기준이 바뀌었거나 다른 점이 있다면 알려 주세요.",
@@ -191,6 +191,11 @@ const extra: Record<string, string> = {
   "status.photo.title": "사진을 확인하지 못했어요",
   "status.region.title": "동네를 다시 골라 주세요",
   "status.edit": "입력 수정",
+  "settings.contact.pending": "문의 경로를 준비하고 있어요.",
+  "settings.sources.empty": "출처 정보 확인 필요",
+  "settings.theme.saveError": "화면 모드를 저장하지 못했어요. 이전 설정을 유지했어요.",
+  "settings.region.removed": "선택한 동네가 지원 목록에 없어요. 동네를 다시 골라 주세요.",
+  "settings.tagline": "SaLLiM · 삶을 간단하게",
 };
 for (const k in extra) if (!(k in copy)) copy[k] = extra[k];
 export const t = (k: string) => copy[k] ?? k;
