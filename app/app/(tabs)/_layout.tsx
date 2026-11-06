@@ -14,7 +14,7 @@ export default function TabsLayout() {
     })();
   }, [router]);
   return (
-    <Tabs screenOptions={{ tabBarActiveTintColor: c.primary, tabBarStyle: { backgroundColor: c.surface }, sceneStyle: { backgroundColor: c.bg } }}>
+    <Tabs screenOptions={{ headerShown: false, animation: "fade",  tabBarActiveTintColor: c.primary, tabBarStyle: { backgroundColor: c.surface }, sceneStyle: { backgroundColor: c.bg } }}>
       <Tabs.Screen name="index" options={{ title: "홈" }} />
       <Tabs.Screen name="capture" options={{ title: "찍기", tabBarStyle: { display: "none" } }} />
       <Tabs.Screen name="ask" options={{ title: "물어보기" }} />
