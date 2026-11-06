@@ -6,7 +6,9 @@ import { useFocusEffect, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Button from "../../components/Button";
 import Skeleton from "../../components/Skeleton";
-import { getRegions } from "../../lib/api";
+import SourceDisclosure from "../../components/SourceDisclosure";
+import { getRegions, getSchedule } from "../../lib/api";
+import type { Source } from "../../lib/api-types";
 import { t } from "../../lib/copy";
 import { getRegionId } from "../../lib/region";
 import { loadThemePref, saveThemePref, ThemePref } from "../../lib/themePref";
@@ -21,12 +23,15 @@ export default function Settings() {
   const [removed, setRemoved] = useState(false);
   const [theme, setTheme] = useState<ThemePref | null>(null);
   const [themeErr, setThemeErr] = useState(false);
+  const [sources, setSources] = useState<Source[] | null | "error">(null); // null=로딩
 
   useEffect(() => { loadThemePref().then(setTheme); }, []);
   useFocusEffect(useCallback(() => {
     (async () => {
       const id = await getRegionId();
-      if (!id) { setRegionName(null); setRemoved(false); return; }
+      if (!id) { setRegionName(null); setRemoved(false); setSources([]); return; }
+      setSources(null);
+      getSchedule(id).then((r) => setSources(r.sources)).catch(() => setSources("error"));
       try {
         const found = (await getRegions()).find((r) => r.id === id);
         setRegionName(found?.name ?? null);
@@ -88,6 +93,9 @@ export default function Settings() {
         <View style={card}>
           {title("settings.sources.title")}
           <Text style={{ ...typography.body, color: c.text }}>{t("settings.sources.body")}</Text>
+          {sources === null && <Skeleton height={20} />}
+          {sources === "error" && <Text style={{ ...typography.caption, color: c.subtext }}>출처를 불러오지 못했어요. 잠시 후 다시 열어 주세요.</Text>}
+          {Array.isArray(sources) && <SourceDisclosure sources={sources} label={t("result.sources.toggle")} />}
         </View>
 
         <View style={card}>
