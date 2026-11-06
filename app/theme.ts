@@ -22,17 +22,47 @@ export const lightColors = {
   "disabledBg": "#E0E3D9",
   "disabledText": "#536157",
   "cameraBg": "#29382F",
-  "onCamera": "#FFFFFF"
+  "onCamera": "#FFFFFF",
+  "surfacePressed": "#F0F1E7",
+  "surfaceRaised": "#FFFFFF",
+  "placeholder": "#536157",
+  "skeleton": "#D6DACA",
+  "skeletonHighlight": "#ECEEE3",
+  "overlay": "#13241CCC",
+  "transparent": "#00000000"
 } as const;
 
-// 다크 팔레트 — designer D1 확정 전 임시값(본문/배경 대비 4.5:1 이상). 확정되면 교체.
+// 원본: docs/design/tokens.json v2 themes.dark — 값 복사본
 export const darkColors: Record<keyof typeof lightColors, string> = {
-  bg: "#16211B", surface: "#1F2D25", text: "#EEF1E6", subtext: "#B4BFB3",
-  primary: "#8FCDA8", onPrimary: "#0F1F16", primaryPressed: "#A9DDBF",
-  tint: "#2A3C31", accent: "#F1C3A2", onAccent: "#253D32", border: "#7C8C7E", divider: "#34463A",
-  warn: "#F3D79B", warnBg: "#3B3014", error: "#F2A9A3", errorBg: "#3E1D1B",
-  success: "#8FCDA8", focus: "#8FCDA8", disabledBg: "#2A3A30", disabledText: "#B4BFB3",
-  cameraBg: "#0F1713", onCamera: "#FFFFFF",
+  "bg": "#15231C",
+  "surface": "#1F3027",
+  "text": "#F3F4E9",
+  "subtext": "#BECBBC",
+  "primary": "#ACD1B2",
+  "onPrimary": "#183323",
+  "primaryPressed": "#91BC99",
+  "tint": "#304838",
+  "accent": "#E6B493",
+  "onAccent": "#24372B",
+  "border": "#829383",
+  "divider": "#405548",
+  "warn": "#F3D495",
+  "warnBg": "#42351F",
+  "error": "#FFBAB0",
+  "errorBg": "#482C2A",
+  "success": "#ACD1B2",
+  "focus": "#C9E4BC",
+  "disabledBg": "#35443A",
+  "disabledText": "#BECBBC",
+  "cameraBg": "#102018",
+  "onCamera": "#FFFFFF",
+  "surfacePressed": "#2C4235",
+  "surfaceRaised": "#293E31",
+  "placeholder": "#BECBBC",
+  "skeleton": "#405548",
+  "skeletonHighlight": "#536B59",
+  "overlay": "#000000CC",
+  "transparent": "#00000000"
 };
 
 // 정적 import 호환용(라이트). 다크 대응이 필요한 화면은 useColors() 사용.
@@ -46,6 +76,9 @@ export const space = {
   "none": 0,
   "xs": 4,
   "sm": 8,
+  "chipGap": 6,
+  "chipX": 10,
+  "chipY": 5,
   "smPlus": 12,
   "md": 16,
   "page": 20,
@@ -183,4 +216,4 @@ export const shadow = {
   }
 } as const;
 
-export const motion = { pressMs: 100, screenMs: 200, loadingOrbitMs: 1400, toastMs: 2400 } as const;
+export const motion = {"pressMs": 100, "screenMs": 200, "loadingOrbitMs": 1400, "reducedMotionMs": 0, "sheetEnterMs": 280, "sheetExitMs": 200, "cardEnterMs": 260, "cardStaggerMs": 40, "skeletonMs": 1200, "scanMs": 1600, "themeMs": 180, "toastEnterMs": 180, "toastVisibleMs": 4000, "pressScale": 0.98, "cardOffsetY": 16, "sheetOffsetY": 32, "easing": {"standard": [0.2, 0, 0, 1], "enter": [0.16, 1, 0.3, 1], "exit": [0.4, 0, 1, 1], "linear": [0, 0, 1, 1]}} as const;

@@ -8,7 +8,7 @@ export default function Toast({ message, onHide }: { message: string | null; onH
   const c = useColors();
   useEffect(() => {
     if (!message) return;
-    const t = setTimeout(onHide, motion.toastMs);
+    const t = setTimeout(onHide, motion.toastVisibleMs);
     return () => clearTimeout(t);
   }, [message, onHide]);
   if (!message) return null;

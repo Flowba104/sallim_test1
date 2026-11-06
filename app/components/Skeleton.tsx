@@ -9,5 +9,5 @@ export default function Skeleton({ width = "100%", height = 20 }: { width?: Dime
   useEffect(() => { o.value = withRepeat(withTiming(1, { duration: motion.loadingOrbitMs / 2 }), -1, true); }, [o]);
   const style = useAnimatedStyle(() => ({ opacity: o.value }));
   return <Animated.View accessibilityElementsHidden importantForAccessibility="no"
-    style={[{ width, height, borderRadius: radius.sm, backgroundColor: c.divider }, style]} />;
+    style={[{ width, height, borderRadius: radius.sm, backgroundColor: c.skeleton }, style]} />;
 }

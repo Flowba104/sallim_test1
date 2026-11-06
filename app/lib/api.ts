@@ -1,5 +1,5 @@
 import type {
-  AskRequest, AskResponse, FollowUpRequest, Region, ScheduleResponse,
+  ApiErrorBody, AskRequest, AskResponse, ErrorCode, FollowUpRequest, Region, ScheduleResponse,
 } from "./api-types";
 
 const BASE = process.env.EXPO_PUBLIC_API_URL; // 없으면 mock 모드
@@ -47,15 +47,27 @@ const MOCK_SCHEDULE: ScheduleResponse = {
 
 const delay = <T,>(v: T) => new Promise<T>((r) => setTimeout(() => r(v), 300));
 
+// code: 서버 ErrorCode 또는 "network"(fetch 실패·15초 타임아웃 = 오프라인/서버 연결 실패)
+export class ApiError extends Error {
+  constructor(public code: ErrorCode | "network", message: string) { super(message); }
+}
+
+const TIMEOUT_MS = 15000;
+
 async function http<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(BASE + path, {
-    ...init,
-    headers: { "Content-Type": "application/json" },
-  });
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), TIMEOUT_MS);
+  let res: Response;
+  try {
+    res = await fetch(BASE + path, { ...init, signal: ctl.signal, headers: { "Content-Type": "application/json" } });
+  } catch {
+    throw new ApiError("network", "서버에 연결하지 못했어요. 네트워크를 확인해 주세요.");
+  } finally {
+    clearTimeout(timer);
+  }
   if (!res.ok) {
-    const body = await res.json().catch(() => null);
-    const d = body?.detail;
-    throw new Error(typeof d === "string" ? d : `서버 오류 ${res.status}`);
+    const body: Partial<ApiErrorBody> | null = await res.json().catch(() => null);
+    throw new ApiError(body?.error?.code ?? "internal_error", body?.error?.message ?? `서버 오류 (${res.status})`);
   }
   return res.json();
 }
