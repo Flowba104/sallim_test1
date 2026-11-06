@@ -61,4 +61,17 @@ export type ScheduleResponse = {
 // POST /ask                     AskRequest -> AskResponse
 // POST /ask/followup            FollowUpRequest -> AskResponse
 // GET  /schedule?region_id=...  -> ScheduleResponse
-// 오류: 404 {detail} (없는 region_id/item_key), 422 (요청 형식 오류)
+
+// 오류 응답 (2xx 아님): 항상 { error: { code, message } }. message는 화면에 그대로 보여도 되는 존댓말.
+export type ErrorCode =
+  | "invalid_request"   // 422 요청 형식 오류
+  | "invalid_image"     // 422 사진을 읽을 수 없음 → 다시 찍기
+  | "image_too_large"   // 413 → 다시 찍기 (긴 변 1024px JPEG로 줄여서 보낼 것)
+  | "region_not_found"  // 404 → 동네 다시 선택
+  | "item_not_found"    // 404 (followup)
+  | "not_found"         // 404 없는 경로
+  | "provider_timeout"  // 504 사진 분석 12초 초과 → 다시 시도 / 이름으로 묻기
+  | "provider_error"    // 502 사진 분석 서비스 장애 → 이름으로 묻기
+  | "internal_error";   // 500
+export type ApiErrorBody = { error: { code: ErrorCode; message: string } };
+// 응답이 아예 없으면(fetch 실패·타임아웃) 앱에서 오프라인/서버 연결 실패로 처리

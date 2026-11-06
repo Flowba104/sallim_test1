@@ -7,6 +7,9 @@ import httpx
 from ..schemas import Item
 from .base import Classification, VisionProvider, build_prompt, parse_response
 
+# 앱의 "3초 안에 답" 목표: 연결 5초, 전체 12초 넘으면 provider_timeout
+TIMEOUT = httpx.Timeout(12, connect=5)
+
 
 class GeminiVisionProvider(VisionProvider):
     name = "gemini"
@@ -17,7 +20,7 @@ class GeminiVisionProvider(VisionProvider):
 
     def _call(self, parts: list) -> str:
         url = f"https://generativelanguage.googleapis.com/v1beta/models/{self.model}:generateContent"
-        r = httpx.post(url, timeout=30, headers={"x-goog-api-key": self.api_key}, json={
+        r = httpx.post(url, timeout=TIMEOUT, headers={"x-goog-api-key": self.api_key}, json={
             "contents": [{"parts": parts}],
             "generationConfig": {"responseMimeType": "application/json", "maxOutputTokens": 200},
         })

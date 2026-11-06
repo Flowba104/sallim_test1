@@ -62,3 +62,10 @@ def test_schedule_and_regions_shapes():
     assert r["today"] in WEEKDAYS
     for reg in c.get("/regions").json():
         check("Region", reg)
+
+
+def test_error_codes_match_server():
+    ts = set(re.findall(r'"(\w+)"', re.search(r"export type ErrorCode =(.*?);", TS, re.S).group(1)))
+    src = (Path(__file__).parents[1] / "app" / "main.py").read_text(encoding="utf-8")
+    used = set(re.findall(r'(?:ApiError|error_json)\(\d+, "(\w+)"', src)) | {"not_found", "invalid_request"}
+    assert ts == used

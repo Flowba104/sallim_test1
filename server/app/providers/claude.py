@@ -9,6 +9,9 @@ from .base import Classification, VisionProvider, build_prompt, parse_response
 
 API_URL = "https://api.anthropic.com/v1/messages"
 
+# 앱의 "3초 안에 답" 목표: 연결 5초, 전체 12초 넘으면 provider_timeout
+TIMEOUT = httpx.Timeout(12, connect=5)
+
 
 class ClaudeVisionProvider(VisionProvider):
     name = "claude"
@@ -18,7 +21,7 @@ class ClaudeVisionProvider(VisionProvider):
         self.model = os.environ.get("CLAUDE_MODEL", "claude-sonnet-5-5")
 
     def _call(self, content: list) -> str:
-        r = httpx.post(API_URL, timeout=30, headers={
+        r = httpx.post(API_URL, timeout=TIMEOUT, headers={
             "x-api-key": self.api_key, "anthropic-version": "2023-06-01",
             "content-type": "application/json",
         }, json={"model": self.model, "max_tokens": 200,
