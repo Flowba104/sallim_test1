@@ -11,7 +11,7 @@ import ErrorState from "../../components/ErrorState";
 import Sheet from "../../components/Sheet";
 import Skeleton from "../../components/Skeleton";
 import SourceDisclosure from "../../components/SourceDisclosure";
-import { ApiError, getSchedule, isMock } from "../../lib/api";
+import { ApiError, getRegions, getSchedule, isMock } from "../../lib/api";
 import type { ScheduleResponse } from "../../lib/api-types";
 import { t } from "../../lib/copy";
 import { getRecent, Recent } from "../../lib/recent";
@@ -30,6 +30,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [day, setDay] = useState<string | null>(null);
   const [sheet, setSheet] = useState(false);
+  const [regionName, setRegionName] = useState<string | null>(null);
   const [recent, setRecent] = useState<Recent[]>([]);
 
   const load = useCallback(() => {
@@ -42,13 +43,16 @@ export default function Home() {
       .finally(() => setLoading(false));
   }, [regionId]);
   useEffect(load, [load]);
+  useEffect(() => {
+    if (!regionId) { setRegionName(null); return; }
+    getRegions().then((rs) => setRegionName(rs.find((r) => r.id === regionId)?.name ?? null)).catch(() => {});
+  }, [regionId]);
   useFocusEffect(useCallback(() => { getRecent().then(setRecent); }, []));
 
   // 다른 동네 데이터는 새 응답이 올 때까지 쓰지 않는다
   const data = s && s.region_id === regionId ? s : null;
   const cats = data?.today_categories ?? [];
   const wrap = width < 360 || fontScale > 1.3; // 요일 4+3행
-  const per = wrap ? 4 : 7;
   const sel = day ?? data?.today ?? "";
 
   return (
@@ -57,11 +61,11 @@ export default function Home() {
         <View style={{ minHeight: 64, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
           <View>
             <Text style={{ ...typography.section, color: c.primary }}>SaLLiM</Text>
-            <Text style={{ ...typography.caption, color: c.subtext }}>분리배출 도우미</Text>
+            <Text style={{ ...typography.caption, color: c.subtext }}>{t("home.slogan")}</Text>
           </View>
-          <Pressable accessibilityRole="button" accessibilityLabel="동네 변경" onPress={() => router.push("/region")}
+          <Pressable accessibilityRole="button" accessibilityLabel={regionName ? `현재 동네 ${regionName}, 변경` : "동네 선택"} onPress={() => router.push("/region")}
             style={{ minHeight: sizes.touchMin, minWidth: sizes.touchMin, justifyContent: "center", alignItems: "flex-end" }}>
-            <Text style={{ ...typography.label, color: c.primary }}>{t("home.pickRegion")}</Text>
+            <Text style={{ ...typography.label, color: c.primary }}>{regionName ?? t("home.pickRegion")}</Text>
           </Pressable>
         </View>
 
@@ -93,7 +97,7 @@ export default function Home() {
         {err && !(data && err.code === "network") && <ErrorState error={err} onRetry={load} retrying={loading} />}
 
         {data && (
-          <Animated.View entering={FadeInDown.duration(motion.cardEnterMs).withInitialValues({ transform: [{ translateY: motion.cardOffsetY }] })}
+          <Animated.View entering={FadeInDown.duration(motion.cardEnterMs)}
             style={{ minHeight: 236, gap: space.sm, padding: space.page, borderRadius: radius.md, borderWidth: 1, borderColor: c.divider, backgroundColor: c.surface }}>
             <View style={{ flexDirection: "row", alignItems: "center", gap: space.sm }}>
               <View style={{ width: space.sm, height: space.md, borderRadius: radius.xs, backgroundColor: c.accent }} />
@@ -126,8 +130,8 @@ export default function Home() {
             <Text accessibilityRole="header" style={{ ...typography.section, color: c.text }}>{t("home.week.title")}</Text>
             <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space.xxs }}>
               {DAYS.map((d) => (
-                <View key={d} style={{ width: `${100 / per - 1}%`, minWidth: sizes.touchAbsoluteMin }}>
-                  <Chip label={d === data.today ? `${d}·오늘` : d} selected={d === sel} onPress={() => setDay(d)} />
+                <View key={d} style={{ flexGrow: 1, flexBasis: wrap ? "23%" : "12%", minWidth: sizes.touchMin }}>
+                  <Chip compact label={d} sub={d === data.today ? "오늘" : undefined} selected={d === sel} onPress={() => setDay(d)} />
                 </View>
               ))}
             </View>

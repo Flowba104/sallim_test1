@@ -31,6 +31,7 @@ export default function Ask() {
   const [result, setResult] = useState<AskResponse | null>(null);
   const [more, setMore] = useState(false);
   const [n, setN] = useState(0); // 새 질문마다 ResultCard 리마운트(누적 답 초기화)
+  const resultY = useRef(0);
   const job = useRef(0); // 취소 후 늦게 온 응답 무시용
 
   useEffect(() => { if (params.q) setQ(String(params.q)); }, [params.q]);
@@ -45,7 +46,7 @@ export default function Ask() {
       if (mine !== job.current) return;
       setResult(r); setN((x) => x + 1);
       if (r.item_key && r.item_name) addRecent({ item_key: r.item_key, item_name: r.item_name, category: r.category, region_id: regionId });
-      setTimeout(() => scroll.current?.scrollToEnd({ animated: true }), 100);
+      setTimeout(() => scroll.current?.scrollTo({ y: Math.max(0, resultY.current - space.md), animated: true }), 150);
     } catch (e) {
       if (mine === job.current) setErr(e instanceof ApiError ? e : new ApiError("internal_error", ""));
     } finally {
@@ -72,13 +73,15 @@ export default function Ask() {
         )}
 
         <View style={{ gap: space.sm }}>
+          <Text style={{ ...typography.label, color: c.text }}>{t("ask.input.label")}</Text>
           <TextInput ref={input} value={q} onChangeText={(v) => { setQ(v); setEmptyErr(false); }} multiline
-            placeholder={t("ask.placeholder")} placeholderTextColor={c.placeholder} accessibilityLabel={t("ask.title")}
+            placeholder={t("ask.placeholder")} placeholderTextColor={c.placeholder} accessibilityLabel={t("ask.input.label")}
             keyboardAppearance={dark ? "dark" : "light"} editable={!!regionId}
             style={{ ...typography.body, minHeight: 120, textAlignVertical: "top", padding: space.input, borderWidth: emptyErr ? 2 : 1,
               borderColor: emptyErr ? c.error : c.border, borderRadius: radius.button, backgroundColor: c.surface, color: c.text }} />
+          <Text style={{ ...typography.caption, color: c.subtext }}>{t("ask.input.hint")}</Text>
           {q.length > 0 && <Button variant="secondary" label={t("ask.clear")} haptic={false} onPress={() => { setQ(""); input.current?.focus(); }} />}
-          {emptyErr && <Text accessibilityRole="alert" style={{ ...typography.caption, color: c.error }}>{t("ask.placeholder")}</Text>}
+          {emptyErr && <Text accessibilityRole="alert" style={{ ...typography.caption, color: c.error }}>{t("ask.input.errorEmpty")}</Text>}
         </View>
         <Button label={busy ? t("ask.loading") : t("ask.submit")} busy={busy} disabled={!regionId || !q.trim()} onPress={submit} />
 
@@ -98,7 +101,7 @@ export default function Ask() {
         )}
         {err && <ErrorState error={err} onRetry={submit} retrying={busy} onEdit={() => input.current?.focus()} />}
         {result && regionId && (
-          <Animated.View entering={FadeInDown.duration(motion.cardEnterMs)}>
+          <Animated.View entering={FadeInDown.duration(motion.cardEnterMs)} onLayout={(e) => { resultY.current = e.nativeEvent.layout.y; }}>
             <ResultCard key={n} result={result} regionId={regionId} onChange={setResult} onRetake={() => router.push("/capture")} />
           </Animated.View>
         )}

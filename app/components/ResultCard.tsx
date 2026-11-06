@@ -21,14 +21,14 @@ export default function ResultCard({ result: r, regionId, onChange, onRetake }: 
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState<boolean | null>(null); // 처리 중인 답(true=예)
-  const [err, setErr] = useState(false);
+  const [err, setErr] = useState<boolean | null>(null); // 실패한 답(true=예) — 재시도·선택 표시용
   // 지금까지의 되묻기 답 누적 — false도 유지. 새 /ask 결과는 부모가 key로 리마운트해 초기화
   const [state, setState] = useState<ItemState>({});
 
   async function answer(yes: boolean) {
     if (!r.item_key || !r.follow_up || busy !== null) return;
     const next = { ...state, [r.follow_up.key]: yes };
-    setErr(false);
+    setErr(null);
     setBusy(yes);
     Haptics.selectionAsync().catch(() => {});
     try {
@@ -37,7 +37,7 @@ export default function ResultCard({ result: r, regionId, onChange, onRetake }: 
       onChange(nr);
       if (!nr.follow_up) setOpen(false);
     } catch (e) {
-      setErr(true);
+      setErr(yes);
       if (!(e instanceof ApiError)) console.warn(e);
     } finally {
       setBusy(null);
@@ -99,7 +99,7 @@ export default function ResultCard({ result: r, regionId, onChange, onRetake }: 
         )}
 
         <SourceDisclosure sources={r.sources} label={t("result.sources.toggle")} />
-        {r.follow_up && <Button variant="secondary" label={t("result.followUp.open")} onPress={() => { setErr(false); setOpen(true); }} />}
+        {r.follow_up && <Button variant="secondary" label={t("result.followUp.open")} onPress={() => { setErr(null); setOpen(true); }} />}
       </View>
 
       {!r.confident ? (
@@ -124,16 +124,17 @@ export default function ResultCard({ result: r, regionId, onChange, onRetake }: 
             <Text style={{ ...typography.caption, color: c.subtext }}>{t("result.followUp.sheetTitle")}</Text>
             <Text accessibilityRole="header" style={{ ...typography.resultTitle, color: c.text }}>{r.follow_up.question}</Text>
             {busy !== null && <Text accessibilityLiveRegion="polite" style={{ ...typography.body, color: c.subtext }}>{t("result.followUp.loading")}</Text>}
-            {err && (
-              <View accessibilityRole="alert" style={{ padding: space.md, borderRadius: radius.sm, backgroundColor: c.errorBg }}>
+            {err !== null && (
+              <View accessibilityRole="alert" style={{ gap: space.smPlus, padding: space.md, borderRadius: radius.sm, backgroundColor: c.errorBg }}>
                 <Text style={{ ...typography.body, color: c.error }}>{t("result.followUp.error")}</Text>
+                <Button label={t("common.retry")} haptic={false} onPress={() => answer(err)} />
               </View>
             )}
             <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space.smPlus }}>
               {[true, false].map((yes) => (
                 <View key={String(yes)} style={{ flexGrow: 1, flexBasis: 140 }}>
                   <Button label={t(yes ? "result.followUp.yes" : "result.followUp.no")} busy={busy === yes} disabled={busy !== null && busy !== yes}
-                    variant={yes ? "primary" : "secondary"} haptic={false} onPress={() => answer(yes)} />
+                    variant={yes === (err ?? busy) ? "primary" : "secondary"} haptic={false} onPress={() => answer(yes)} />
                 </View>
               ))}
             </View>

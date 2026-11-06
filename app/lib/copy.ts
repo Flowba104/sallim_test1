@@ -1,7 +1,5 @@
-// 원본: docs/research/ux-copy.md 9장. 문구 수정은 R1(researcher) 문서와 같이.
-
+// 원본: docs/research/ux-copy.md 9장 + 코드 전용 보충키(extra). 문구 수정은 R1 문서와 같이.
 export const copy: Record<string, string> = {
-  // 공통 · 탭
   "common.appName": "SaLLiM",
   "common.next": "다음",
   "common.prev": "이전",
@@ -17,8 +15,6 @@ export const copy: Record<string, string> = {
   "tabs.capture": "찍기",
   "tabs.ask": "물어보기",
   "tabs.settings": "설정",
-
-  // U2 온보딩 · 동네 선택
   "onboarding.photo.title": "찍으면, 버리는 법이 보여요",
   "onboarding.photo.body": "물건을 찍고 알맞은 배출 방법을 확인해요.",
   "onboarding.method.title": "순서대로, 간단하게",
@@ -41,9 +37,7 @@ export const copy: Record<string, string> = {
   "region.pick": "동네를 선택해 주세요",
   "region.saveError": "동네를 저장하지 못했어요. 다시 시도해 주세요.",
   "region.removedNotice": "이전에 선택한 동네를 찾지 못했어요. 동네를 다시 골라 주세요.",
-
-  // U3 홈
-  "home.slogan": "우리 동네 분리배출 안내장",
+  "home.slogan": "삶을 간단하게",
   "home.eyebrow": "오늘의 살림",
   "home.title": "하나씩, 가볍게.",
   "home.today.title": "오늘 내놓는 품목",
@@ -71,8 +65,6 @@ export const copy: Record<string, string> = {
   "home.error": "배출 일정을 불러오지 못했어요",
   "home.noRegion": "먼저 동네를 선택해 주세요.",
   "home.pickRegion": "동네 선택하기",
-
-  // U4 촬영
   "capture.header": "찍어서 물어보기",
   "capture.guide": "버릴 물건 하나를 가운데에 맞춰 주세요",
   "capture.guideSub": "라벨이나 재질 표시가 보이면 더 정확해요",
@@ -88,11 +80,16 @@ export const copy: Record<string, string> = {
   "capture.permission.allow": "카메라 권한 허용하기",
   "capture.permission.settings": "설정에서 권한 켜기",
   "capture.noRegion": "먼저 동네를 선택해 주세요.",
-
-  // U5 결과 · 되묻기
+  "capture.privacy": "얼굴·주소가 함께 찍히지 않게 해 주세요.",
+  "capture.one": "한 번에 한 물건",
+  "capture.preparing": "카메라를 준비하고 있어요",
+  "capture.slow": "조금 더 확인하고 있어요",
+  "capture.retry": "다시 시도",
+  "capture.fail": "결과를 받지 못했어요",
+  "capture.photoFail": "사진을 처리하지 못했어요. 다시 촬영하거나 앨범에서 골라 주세요.",
   "result.header": "배출 방법 안내",
   "result.steps.title": "이렇게 배출해 주세요",
-  "result.nextDays.title": "배출 요일·시간",
+  "result.nextDays.title": "다음 배출 요일",
   "result.nextDays.prefix": "배출 요일",
   "result.nextDays.unknown": "배출 요일 확인 필요",
   "result.time.prefix": "배출 시간",
@@ -108,6 +105,7 @@ export const copy: Record<string, string> = {
   "result.unknown.body": "가까이서 다시 찍거나 품목 이름으로 검색해 보세요.",
   "result.unknown.retryPhoto": "다시 찍기",
   "result.unknown.askText": "이름으로 물어보기",
+  "result.followUp.open": "상태 확인하기",
   "result.followUp.sheetTitle": "상태를 하나만 알려 주세요",
   "result.followUp.sheetBody": "상태에 따라 버리는 방법이 달라져요.",
   "result.followUp.has_label": "라벨이나 스티커가 아직 붙어 있나요?",
@@ -123,19 +121,19 @@ export const copy: Record<string, string> = {
   "result.sources.prefix": "출처",
   "result.sources.updatedPrefix": "자료 기준",
   "result.sources.empty": "출처 정보 확인 필요",
-
-  // U6 이름으로 물어보기
   "ask.header": "이름으로 물어보기",
   "ask.title": "어떤 물건을 버리시나요?",
+  "ask.input.label": "어떤 물건을 버리나요?",
   "ask.placeholder": "예: 투명 페트병, 깨진 유리, 부탄가스",
+  "ask.input.hint": "품목명과 라벨·오염 상태를 함께 적어 주세요.",
+  "ask.input.errorEmpty": "버릴 물건 이름을 입력해 주세요.",
   "ask.submit": "물어보기",
   "ask.clear": "입력 지우기",
   "ask.chips.title": "자주 묻는 품목",
-  "ask.chips.subtitle": "궁금한 품목을 눌러 바로 확인해 보세요",
+  "ask.chips.subtitle": "품목을 눌러 이름을 입력해 보세요",
+  "ask.chips.more": "더 보기",
   "ask.loading": "배출 방법을 찾고 있어요",
   "ask.noRegion": "먼저 동네를 선택해 주세요.",
-
-  // U7 상태 · 오류 (ErrorCode 매핑)
   "status.loading.schedule": "동네 배출 일정을 확인하고 있어요",
   "status.loading.photo": "사진으로 품목을 확인하고 있어요",
   "status.loading.question": "배출 방법을 찾고 있어요",
@@ -155,47 +153,39 @@ export const copy: Record<string, string> = {
   "status.error.provider_error": "사진 분석 서비스에 연결하지 못했어요. 이름으로 물어봐 주세요.",
   "status.error.internal_error": "서버에 문제가 생겼어요. 잠시 후 다시 시도해 주세요.",
   "status.error.network": "서버에 연결하지 못했어요. 인터넷 연결을 확인해 주세요.",
-
-  // U9 설정
-  "settings.header": "설정",
-  "settings.region.title": "우리 동네 설정",
-  "settings.region.current": "현재 선택한 동네",
-  "settings.region.change": "동네 바꾸기",
-  "settings.region.none": "선택한 동네가 없어요",
-  "settings.theme.title": "화면 모드",
-  "settings.theme.system": "기기 설정 따르기",
-  "settings.theme.light": "밝은 화면",
-  "settings.theme.dark": "어두운 화면",
-  "settings.sources.title": "데이터 출처 안내",
-  "settings.sources.body": "기후에너지환경부 분리배출 지침과 지자체 공식 공지를 바탕으로 안내해요.",
-  "settings.disclaimer.title": "배출 시 유의사항",
-  "settings.disclaimer.body": "동이나 아파트 단지마다 세부 배출 요일과 시간이 다를 수 있어요. 단지 안내문이나 구청 공지를 함께 확인해 주세요.",
-  "settings.privacy.title": "개인정보 보호 안내",
-  "settings.privacy.body": "사진은 품목을 확인하는 동안에만 쓰고 서버에 저장하지 않아요. 정확한 분석을 위해 AI 분석 서비스로 전송될 수 있어요. 상세 주소나 위치 권한은 받지 않아요.",
-  "settings.version.title": "앱 버전",
-  "settings.contact.title": "문의 및 정보 수정 제안",
-  "settings.contact.body": "우리 동네 배출 기준이 바뀌었거나 다른 점이 있다면 알려 주세요.",
-};
-
-// 코드에서 쓰지만 ux-copy에 아직 없는 키 (R1에 있으면 위 값이 우선)
-const extra: Record<string, string> = {
-  "capture.privacy": "얼굴·주소가 함께 찍히지 않게 해 주세요.",
-  "capture.one": "한 번에 한 물건",
-  "capture.preparing": "카메라를 준비하고 있어요",
-  "capture.slow": "조금 더 확인하고 있어요",
-  "capture.retry": "다시 시도",
-  "capture.fail": "결과를 받지 못했어요",
-  "capture.photoFail": "사진을 처리하지 못했어요. 다시 촬영하거나 앨범에서 골라 주세요.",
-  "result.followUp.open": "상태 확인하기",
   "status.timeout.title": "확인하는 데 시간이 걸리고 있어요",
   "status.photo.title": "사진을 확인하지 못했어요",
   "status.region.title": "동네를 다시 골라 주세요",
   "status.edit": "입력 수정",
-  "settings.contact.pending": "문의 경로를 준비하고 있어요.",
-  "settings.sources.empty": "출처 정보 확인 필요",
-  "settings.theme.saveError": "화면 모드를 저장하지 못했어요. 이전 설정을 유지했어요.",
-  "settings.region.removed": "선택한 동네가 지원 목록에 없어요. 동네를 다시 골라 주세요.",
+  "settings.header": "설정",
   "settings.tagline": "SaLLiM · 삶을 간단하게",
+  "settings.region.title": "우리 동네 설정",
+  "settings.region.current": "현재 선택한 동네",
+  "settings.region.change": "동네 바꾸기",
+  "settings.region.none": "선택한 동네가 없어요",
+  "settings.region.removed": "선택한 동네가 지원 목록에 없어요. 동네를 다시 골라 주세요.",
+  "settings.theme.title": "화면 모드",
+  "settings.theme.system": "기기 설정 따르기",
+  "settings.theme.light": "밝은 화면",
+  "settings.theme.dark": "어두운 화면",
+  "settings.theme.saveError": "화면 모드를 저장하지 못했어요. 이전 설정을 유지했어요.",
+  "settings.sources.title": "데이터 출처 안내",
+  "settings.sources.body": "기후에너지환경부 분리배출 지침과 지자체 공식 공지를 바탕으로 안내해요.",
+  "settings.sources.empty": "출처 정보 확인 필요",
+  "settings.disclaimer.title": "배출 시 유의사항",
+  "settings.disclaimer.body": "동이나 아파트 단지마다 세부 배출 요일과 시간이 다를 수 있어요. 단지 안내문이나 구청 공지를 함께 확인해 주세요.",
+  "settings.privacy.title": "개인정보 보호 안내",
+  "settings.privacy.body": "사진은 품목을 확인하는 데만 쓰고 서버에 저장하지 않아요. 확인을 위해 AI 분석 서비스로 보내질 수 있어요. 주소나 위치 권한은 받지 않아요.",
+  "settings.version.title": "앱 버전",
+  "settings.contact.title": "문의 및 정보 수정 제안",
+  "settings.contact.body": "우리 동네 배출 기준이 바뀌었거나 다른 점이 있다면 알려 주세요.",
+  "settings.contact.pending": "문의 경로를 준비하고 있어요.",
+  "settings.contact.unavailable": "문의 경로를 준비하고 있어요."
+};
+
+// ux-copy에 아직 없는 키 (R1에 들어오면 위 값이 우선)
+const extra: Record<string, string> = {
+  "home.tagline": "삶을 간단하게"
 };
 for (const k in extra) if (!(k in copy)) copy[k] = extra[k];
 export const t = (k: string) => copy[k] ?? k;

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Image, Linking, Pressable, ScrollView, Text, View } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import * as Haptics from "expo-haptics";
-import { useFocusEffect, useRouter } from "expo-router";
+import { useFocusEffect, useNavigation, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { Easing, FadeInDown, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
 import Button from "../../components/Button";
@@ -32,6 +32,7 @@ function ScanLine() {
 export default function Capture() {
   const c = useColors();
   const router = useRouter();
+  const navigation = useNavigation();
   const regionId = useRegion();
   const [perm, requestPerm] = useCameraPermissions();
   const cam = useRef<CameraView>(null);
@@ -45,6 +46,8 @@ export default function Capture() {
   const [n, setN] = useState(0);
   const job = useRef(0); // 취소·재시도 후 늦게 온 응답 무시용
   const [focused, setFocused] = useState(true);
+  // 촬영 화면만 전체화면(탭 숨김). 결과 단계에서는 탭바를 되살려 홈·설정으로 갈 수 있게 한다.
+  useEffect(() => { navigation.setOptions({ tabBarStyle: result ? undefined : { display: "none" } }); }, [navigation, result]);
 
   useFocusEffect(useCallback(() => { setFocused(true); return () => { setFocused(false); job.current++; }; }, []));
   useEffect(() => {
@@ -96,15 +99,15 @@ export default function Capture() {
 
   const album = async () => { if (!busy) { try { await accept(await pickFromLibrary()); } catch { setErr(new ApiError("invalid_image", "")); } } };
 
-  const Close = (
+  const closeBtn = (color: string) => (
     <Pressable accessibilityRole="button" accessibilityLabel="촬영 닫기" onPress={() => (router.canGoBack() ? router.back() : router.replace("/"))}
       style={{ width: sizes.touchMin, height: sizes.touchMin, justifyContent: "center", alignItems: "center" }}>
-      <Text style={{ ...typography.section, color: c.onCamera }}>✕</Text>
+      <Text style={{ ...typography.section, color }}>✕</Text>
     </Pressable>
   );
   const Header = (
     <View style={{ minHeight: 64, flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: space.page }}>
-      {Close}
+      {closeBtn(c.onCamera)}
       <Text accessibilityRole="header" style={{ ...typography.section, color: c.onCamera }}>{t("capture.header")}</Text>
       <View style={{ width: sizes.touchMin }} />
     </View>
@@ -138,7 +141,7 @@ export default function Capture() {
   if (!photo && !perm?.granted) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: c.bg }}>
-        <View style={{ minHeight: 64, justifyContent: "center", paddingHorizontal: space.page }}>{Close}</View>
+        <View style={{ minHeight: 64, justifyContent: "center", paddingHorizontal: space.page }}>{closeBtn(c.text)}</View>
         <View style={{ flex: 1, justifyContent: "center", padding: space.page, gap: space.md }}>
           <Text accessibilityRole="header" style={{ ...typography.resultTitle, color: c.text }}>{t("capture.permission.title")}</Text>
           <Text style={{ ...typography.body, color: c.subtext }}>{t("capture.permission.body")}</Text>
