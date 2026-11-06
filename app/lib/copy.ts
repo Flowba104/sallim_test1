@@ -187,6 +187,10 @@ const extra: Record<string, string> = {
   "capture.fail": "결과를 받지 못했어요",
   "capture.photoFail": "사진을 처리하지 못했어요. 다시 촬영하거나 앨범에서 골라 주세요.",
   "result.followUp.open": "상태 확인하기",
+  "status.timeout.title": "확인하는 데 시간이 걸리고 있어요",
+  "status.photo.title": "사진을 확인하지 못했어요",
+  "status.region.title": "동네를 다시 골라 주세요",
+  "status.edit": "입력 수정",
 };
 for (const k in extra) if (!(k in copy)) copy[k] = extra[k];
 export const t = (k: string) => copy[k] ?? k;

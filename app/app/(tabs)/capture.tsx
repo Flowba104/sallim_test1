@@ -7,6 +7,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { Easing, FadeInDown, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
 import Button from "../../components/Button";
 import ResultCard from "../../components/ResultCard";
+import ErrorState from "../../components/ErrorState";
 import Skeleton from "../../components/Skeleton";
 import { ApiError, ask } from "../../lib/api";
 import type { AskResponse } from "../../lib/api-types";
@@ -39,7 +40,7 @@ export default function Capture() {
   const [b64, setB64] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [slow, setSlow] = useState(false);
-  const [err, setErr] = useState<string | null>(null);
+  const [err, setErr] = useState<ApiError | null>(null);
   const [result, setResult] = useState<AskResponse | null>(null);
   const [n, setN] = useState(0);
   const job = useRef(0); // 취소·재시도 후 늦게 온 응답 무시용
@@ -65,7 +66,7 @@ export default function Capture() {
       if (r.item_key && r.item_name) addRecent({ item_key: r.item_key, item_name: r.item_name, category: r.category, region_id: regionId });
     } catch (e) {
       if (mine !== job.current) return;
-      setErr(e instanceof ApiError ? e.message : t("capture.fail"));
+      setErr(e instanceof ApiError ? e : new ApiError("internal_error", ""));
     } finally {
       if (mine === job.current) setBusy(false);
     }
@@ -80,7 +81,7 @@ export default function Capture() {
       await send(img);
     } catch {
       setBusy(false);
-      setErr(t("capture.photoFail"));
+      setErr(new ApiError("invalid_image", ""));
     }
   }
 
@@ -90,10 +91,10 @@ export default function Capture() {
     try {
       const p = await cam.current.takePictureAsync({ quality: 1 });
       await accept(p);
-    } catch { setErr(t("capture.photoFail")); }
+    } catch { setErr(new ApiError("invalid_image", "")); }
   }
 
-  const album = async () => { if (!busy) { try { await accept(await pickFromLibrary()); } catch { setErr(t("capture.photoFail")); } } };
+  const album = async () => { if (!busy) { try { await accept(await pickFromLibrary()); } catch { setErr(new ApiError("invalid_image", "")); } } };
 
   const Close = (
     <Pressable accessibilityRole="button" accessibilityLabel="촬영 닫기" onPress={() => (router.canGoBack() ? router.back() : router.replace("/"))}
@@ -146,7 +147,7 @@ export default function Capture() {
             : <Button label={t("capture.permission.allow")} disabled={!perm} onPress={() => requestPerm()} />}
           <Button variant="secondary" label={t("capture.button.album")} onPress={album} />
           <Button variant="secondary" label={t("capture.button.askText")} haptic={false} onPress={() => router.replace("/ask")} />
-          {err && <Text accessibilityRole="alert" style={{ ...typography.body, color: c.error }}>{err}</Text>}
+          {err && <ErrorState error={err} onRetake={() => setErr(null)} />}
         </View>
       </SafeAreaView>
     );
@@ -180,13 +181,7 @@ export default function Capture() {
             <Button variant="secondary" label={t("capture.scanning.cancel")} haptic={false} onPress={reset} />
           </>
         ) : err ? (
-          <View accessibilityRole="alert" style={{ gap: space.smPlus, padding: space.md, borderRadius: radius.md, backgroundColor: c.errorBg }}>
-            <Text style={{ ...typography.bodyStrong, color: c.error }}>{t("capture.fail")}</Text>
-            <Text style={{ ...typography.body, color: c.error }}>{err}</Text>
-            {b64 && <Button label={t("capture.retry")} onPress={() => send(b64)} />}
-            <Button variant="secondary" label={t("result.lowConfidence.retryPhoto")} haptic={false} onPress={reset} />
-            <Button variant="secondary" label={t("capture.button.askText")} haptic={false} onPress={() => router.replace("/ask")} />
-          </View>
+          <ErrorState error={err} onRetry={b64 ? () => send(b64) : undefined} onRetake={reset} />
         ) : (
           <>
             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>

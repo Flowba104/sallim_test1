@@ -7,7 +7,7 @@ import Button from "../../components/Button";
 import CategoryBadge from "../../components/CategoryBadge";
 import CategoryIcon from "../../components/CategoryIcon";
 import Chip from "../../components/Chip";
-import EmptyState from "../../components/EmptyState";
+import ErrorState from "../../components/ErrorState";
 import Sheet from "../../components/Sheet";
 import Skeleton from "../../components/Skeleton";
 import SourceDisclosure from "../../components/SourceDisclosure";
@@ -87,13 +87,10 @@ export default function Home() {
           </View>
         )}
 
-        {err && (
-          <View accessibilityRole="alert" style={{ gap: space.smPlus, padding: space.page, borderRadius: radius.md, backgroundColor: c.errorBg }}>
-            <Text style={{ ...typography.bodyStrong, color: c.error }}>{t("home.error")}</Text>
-            <Text style={{ ...typography.body, color: c.error }}>{data && err.code === "network" ? t("home.offlineCached") : err.message}</Text>
-            <Button label="다시 불러오기" onPress={load} haptic={false} />
-          </View>
+        {err && data && err.code === "network" && (
+          <Text accessibilityRole="alert" style={{ ...typography.caption, color: c.warn }}>{t("home.offlineCached")}</Text>
         )}
+        {err && !(data && err.code === "network") && <ErrorState error={err} onRetry={load} retrying={loading} />}
 
         {data && (
           <Animated.View entering={FadeInDown.duration(motion.cardEnterMs).withInitialValues({ transform: [{ translateY: motion.cardOffsetY }] })}

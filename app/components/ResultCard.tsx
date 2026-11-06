@@ -9,6 +9,7 @@ import { t } from "../lib/copy";
 import Button from "./Button";
 import CategoryIcon from "./CategoryIcon";
 import Sheet from "./Sheet";
+import StatusCard from "./StatusCard";
 import SourceDisclosure from "./SourceDisclosure";
 import { motion, radius, sizes, space, typography, useCategoryColors, useColors } from "../theme";
 
@@ -44,6 +45,14 @@ export default function ResultCard({ result: r, regionId, onChange, onRetake }: 
   }
 
   const known = !!r.item_key && !!r.item_name;
+  if (!known) {
+    return (
+      <StatusCard kind="unknown" title={t("result.unknown.title")} body={t("result.unknown.body")}>
+        <Button label={t("result.unknown.retryPhoto")} onPress={() => (onRetake ? onRetake() : router.push("/capture"))} />
+        <Button variant="secondary" label={t("result.unknown.askText")} haptic={false} onPress={() => router.push("/ask")} />
+      </StatusCard>
+    );
+  }
   const warn = (text: string) => (
     <View style={{ flexDirection: "row", gap: space.sm, padding: space.smPlus, borderRadius: radius.sm, backgroundColor: c.warnBg }}>
       <Text style={{ ...typography.label, color: c.warn }}>⚠</Text>
@@ -56,7 +65,6 @@ export default function ResultCard({ result: r, regionId, onChange, onRetake }: 
       {isMock && warn(t("common.mockNotice"))}
       {known && !r.confident && warn(`${t("result.lowConfidence.title")} ${t("result.lowConfidence.body")}`)}
       <View style={{ gap: space.smPlus, padding: space.page, borderRadius: radius.md, borderWidth: 1, borderColor: c.divider, backgroundColor: c.surface }}>
-        {!known && <Text accessibilityRole="header" style={{ ...typography.section, color: c.text }}>{t("result.unknown.title")}</Text>}
         {r.category && (
           <View style={{ flexDirection: "row", alignItems: "center", gap: space.sm, padding: space.md, borderRadius: radius.sm, backgroundColor: cat.bg }}>
             <CategoryIcon category={r.category} size={sizes.iconDefault} color={cat.text} />
@@ -72,7 +80,7 @@ export default function ResultCard({ result: r, regionId, onChange, onRetake }: 
             {r.steps.map((s, i) => (
               <Animated.View key={i} entering={FadeInDown.delay(Math.min(i, 3) * motion.cardStaggerMs).duration(motion.cardEnterMs)}
                 style={{ minHeight: sizes.buttonMinHeight, flexDirection: "row", alignItems: "center", gap: space.smPlus, paddingVertical: space.smPlus, borderTopWidth: i ? 1 : 0, borderColor: c.divider }}>
-                <View style={{ width: 28, height: 28, borderRadius: radius.pill, backgroundColor: c.tint, alignItems: "center", justifyContent: "center" }}>
+                <View style={{ width: sizes.stepBadge, height: sizes.stepBadge, borderRadius: radius.pill, backgroundColor: c.tint, alignItems: "center", justifyContent: "center" }}>
                   <Text style={{ ...typography.label, color: c.primary }}>{i + 1}</Text>
                 </View>
                 <Text style={{ ...typography.body, color: c.text, flex: 1 }}>{s}</Text>
@@ -94,7 +102,7 @@ export default function ResultCard({ result: r, regionId, onChange, onRetake }: 
         {r.follow_up && <Button variant="secondary" label={t("result.followUp.open")} onPress={() => { setErr(false); setOpen(true); }} />}
       </View>
 
-      {!known || !r.confident ? (
+      {!r.confident ? (
         <View style={{ gap: space.sm }}>
           <Button label={t("result.lowConfidence.retryPhoto")} onPress={() => (onRetake ? onRetake() : router.push("/capture"))} />
           <Button variant="secondary" label={t("result.lowConfidence.askText")} onPress={() => router.push("/ask")} />

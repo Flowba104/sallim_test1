@@ -6,7 +6,8 @@ import Animated, { FadeInDown } from "react-native-reanimated";
 import Button from "../../components/Button";
 import Chip from "../../components/Chip";
 import ResultCard from "../../components/ResultCard";
-import Skeleton from "../../components/Skeleton";
+import ErrorState from "../../components/ErrorState";
+import ResultSkeleton from "../../components/ResultSkeleton";
 import { ApiError, ask } from "../../lib/api";
 import type { AskResponse } from "../../lib/api-types";
 import { t } from "../../lib/copy";
@@ -26,7 +27,7 @@ export default function Ask() {
   const [q, setQ] = useState("");
   const [busy, setBusy] = useState(false);
   const [emptyErr, setEmptyErr] = useState(false);
-  const [err, setErr] = useState<string | null>(null);
+  const [err, setErr] = useState<ApiError | null>(null);
   const [result, setResult] = useState<AskResponse | null>(null);
   const [more, setMore] = useState(false);
   const [n, setN] = useState(0); // 새 질문마다 ResultCard 리마운트(누적 답 초기화)
@@ -46,7 +47,7 @@ export default function Ask() {
       if (r.item_key && r.item_name) addRecent({ item_key: r.item_key, item_name: r.item_name, category: r.category, region_id: regionId });
       setTimeout(() => scroll.current?.scrollToEnd({ animated: true }), 100);
     } catch (e) {
-      if (mine === job.current) setErr(e instanceof ApiError ? e.message : t("capture.fail"));
+      if (mine === job.current) setErr(e instanceof ApiError ? e : new ApiError("internal_error", ""));
     } finally {
       if (mine === job.current) setBusy(false);
     }
@@ -90,18 +91,12 @@ export default function Ask() {
         </View>
 
         {busy && (
-          <View accessible accessibilityLabel={t("ask.loading")} style={{ gap: space.sm, padding: space.page, borderRadius: radius.md, borderWidth: 1, borderColor: c.divider, backgroundColor: c.surface }}>
-            <Skeleton width={120} height={24} /><Skeleton height={32} /><Skeleton height={20} /><Skeleton width="70%" height={20} />
+          <>
+            <ResultSkeleton label={t("status.loading.question")} />
             <Button variant="secondary" label={t("capture.scanning.cancel")} haptic={false} onPress={cancel} />
-          </View>
+          </>
         )}
-        {err && (
-          <View accessibilityRole="alert" style={{ gap: space.smPlus, padding: space.md, borderRadius: radius.md, backgroundColor: c.errorBg }}>
-            <Text style={{ ...typography.bodyStrong, color: c.error }}>{t("capture.fail")}</Text>
-            <Text style={{ ...typography.body, color: c.error }}>{err}</Text>
-            <Button label={t("common.retry")} onPress={submit} />
-          </View>
-        )}
+        {err && <ErrorState error={err} onRetry={submit} retrying={busy} onEdit={() => input.current?.focus()} />}
         {result && regionId && (
           <Animated.View entering={FadeInDown.duration(motion.cardEnterMs)}>
             <ResultCard key={n} result={result} regionId={regionId} onChange={setResult} onRetake={() => router.push("/capture")} />
