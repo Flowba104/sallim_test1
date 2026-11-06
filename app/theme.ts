@@ -76,6 +76,7 @@ export const space = {
   "none": 0,
   "xs": 4,
   "sm": 8,
+  "xxs": 2,
   "chipGap": 6,
   "chipX": 10,
   "chipY": 5,
@@ -98,71 +99,72 @@ export const radius = {
   "pill": 999
 } as const;
 
+// fontWeight 대신 파일별 fontFamily(Pretendard 500은 Regular 파일로 대체 — 파일 3개만 번들). 로드 실패 시 시스템 폰트.
 export const typography = {
   "display": {
     "fontSize": 48,
     "lineHeight": 56,
-    "fontWeight": "700",
+    "fontFamily": "Pretendard-Bold",
     "letterSpacing": -1.6
   },
   "heading": {
     "fontSize": 32,
     "lineHeight": 40,
-    "fontWeight": "700",
+    "fontFamily": "Pretendard-Bold",
     "letterSpacing": -1
   },
   "resultTitle": {
     "fontSize": 28,
     "lineHeight": 36,
-    "fontWeight": "700",
+    "fontFamily": "Pretendard-Bold",
     "letterSpacing": -0.7
   },
   "section": {
     "fontSize": 18,
     "lineHeight": 26,
-    "fontWeight": "600",
+    "fontFamily": "Pretendard-SemiBold",
     "letterSpacing": -0.2
   },
   "body": {
     "fontSize": 16,
     "lineHeight": 24,
-    "fontWeight": "400",
+    "fontFamily": "Pretendard-Regular",
     "letterSpacing": 0
   },
   "bodyStrong": {
     "fontSize": 16,
     "lineHeight": 24,
-    "fontWeight": "600",
+    "fontFamily": "Pretendard-SemiBold",
     "letterSpacing": 0
   },
   "button": {
     "fontSize": 16,
     "lineHeight": 24,
-    "fontWeight": "600",
+    "fontFamily": "Pretendard-SemiBold",
     "letterSpacing": 0
   },
   "label": {
     "fontSize": 14,
     "lineHeight": 20,
-    "fontWeight": "500",
+    "fontFamily": "Pretendard-Regular",
     "letterSpacing": 0
   },
   "caption": {
     "fontSize": 12,
     "lineHeight": 18,
-    "fontWeight": "400",
+    "fontFamily": "Pretendard-Regular",
     "letterSpacing": 0
   },
   "eyebrow": {
     "fontSize": 12,
     "lineHeight": 20,
-    "fontWeight": "600",
+    "fontFamily": "Pretendard-SemiBold",
     "letterSpacing": 0.5
   },
   "navigation": {
     "fontSize": 12,
     "lineHeight": 18,
-    "fontWeight": "600",
+    "fontFamily": "Pretendard-SemiBold",
     "letterSpacing": 0
   }
 } as const;
@@ -217,3 +219,13 @@ export const shadow = {
 } as const;
 
 export const motion = {"pressMs": 100, "screenMs": 200, "loadingOrbitMs": 1400, "reducedMotionMs": 0, "sheetEnterMs": 280, "sheetExitMs": 200, "cardEnterMs": 260, "cardStaggerMs": 40, "skeletonMs": 1200, "scanMs": 1600, "themeMs": 180, "toastEnterMs": 180, "toastVisibleMs": 4000, "pressScale": 0.98, "cardOffsetY": 16, "sheetOffsetY": 32, "easing": {"standard": [0.2, 0, 0, 1], "enter": [0.16, 1, 0.3, 1], "exit": [0.4, 0, 1, 1], "linear": [0, 0, 1, 1]}} as const;
+
+// 원본: docs/design/tokens.json categoryGroups / categoryColors — 값 복사본
+export const categoryGroups: Record<string, readonly string[]> = {"recycle": ["투명페트", "플라스틱", "종이", "종이팩", "캔·고철", "유리병", "비닐", "스티로폼"], "general": ["일반쓰레기"], "food": ["음식물"], "special": ["전용수거", "대형폐기물"]};
+export const categoryColors = {"light": {"recycle": {"bg": "#E8ECDC", "text": "#2E5943"}, "general": {"bg": "#EDE7DC", "text": "#534B3C"}, "food": {"bg": "#F8E8D8", "text": "#70452A"}, "special": {"bg": "#E9E6F0", "text": "#55446D"}}, "dark": {"recycle": {"bg": "#304838", "text": "#ACD1B2"}, "general": {"bg": "#3E3C31", "text": "#DDD2BA"}, "food": {"bg": "#483628", "text": "#F1C399"}, "special": {"bg": "#3B3348", "text": "#D4C4EB"}}} as const;
+
+export function useCategoryColors(category: string | null) {
+  const mode = useColorScheme() === "dark" ? "dark" : "light";
+  const g = Object.keys(categoryGroups).find((k) => category && categoryGroups[k].includes(category)) as keyof typeof categoryColors.light | undefined;
+  return categoryColors[mode][g ?? "recycle"];
+}

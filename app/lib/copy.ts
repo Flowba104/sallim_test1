@@ -1,0 +1,26 @@
+// 임시 문구 — docs/research/ux-copy.md(R1)가 나오면 키 그대로 값만 교체.
+export const copy: Record<string, string> = {
+  "common.next": "다음",
+  "common.prev": "이전",
+  "common.skip": "건너뛰기",
+  "onboarding.photo.title": "찍으면, 버리는 법이 보여요",
+  "onboarding.photo.body": "물건을 찍고 알맞은 배출 방법을 확인해요.",
+  "onboarding.method.title": "순서대로, 간단하게",
+  "onboarding.method.body": "비우고, 헹구고, 분리하는 순서를 한눈에 봐요.",
+  "onboarding.region.title": "우리 동네 기준으로",
+  "onboarding.region.body": "사는 동네에 맞는 배출 요일을 확인해요.",
+  "onboarding.start": "동네 선택하기",
+  "region.header": "사는 동네 선택",
+  "region.title": "사는 동네에 맞게 알려 드릴게요",
+  "region.description": "같은 물건도 배출일은 다르니까요.",
+  "region.loading": "지원 동네를 불러오고 있어요",
+  "region.error": "동네 목록을 불러오지 못했어요",
+  "region.empty": "아직 안내할 수 있는 동네가 없어요",
+  "region.retry": "다시 불러오기",
+  "region.selected": "선택한 동네",
+  "region.help": "동·공동주택에 따라 기준이 다를 수 있어요. 상세 주소와 위치 권한은 받지 않아요.",
+  "region.confirm": "이 동네로 시작하기",
+  "region.pick": "동네를 선택해 주세요",
+  "region.saveError": "동네를 저장하지 못했어요. 다시 시도해 주세요.",
+};
+export const t = (k: string) => copy[k] ?? k;

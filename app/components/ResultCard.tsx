@@ -44,7 +44,7 @@ export default function ResultCard({ result: r, regionId, onChange }: Props) {
           <Btn label="이름으로 물어보기" onPress={() => router.push("/ask")} />
         </View>
       )}
-      {r.item_name && <Text style={{ fontSize: typography.resultTitle.fontSize, fontWeight: typography.resultTitle.fontWeight, color: colors.text }}>{r.confident ? r.item_name : `${r.item_name}${josa(r.item_name)} 보여요`}</Text>}
+      {r.item_name && <Text style={{ fontSize: typography.resultTitle.fontSize, fontFamily: typography.resultTitle.fontFamily, color: colors.text }}>{r.confident ? r.item_name : `${r.item_name}${josa(r.item_name)} 보여요`}</Text>}
       {r.category && (
         <View style={{ flexDirection: "row", alignItems: "center", gap: space.sm }}>
           <CategoryIcon category={r.category} />
