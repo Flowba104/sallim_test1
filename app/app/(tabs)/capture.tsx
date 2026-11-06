@@ -104,7 +104,7 @@ export default function Capture() {
   const Header = (
     <View style={{ minHeight: 64, flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: space.page }}>
       {Close}
-      <Text accessibilityRole="header" style={{ ...typography.section, color: c.onCamera }}>{t("capture.title")}</Text>
+      <Text accessibilityRole="header" style={{ ...typography.section, color: c.onCamera }}>{t("capture.header")}</Text>
       <View style={{ width: sizes.touchMin }} />
     </View>
   );
@@ -113,8 +113,8 @@ export default function Capture() {
   if (regionId === null) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: c.bg, padding: space.page, gap: space.md, justifyContent: "center" }}>
-        <Text style={{ ...typography.resultTitle, color: c.text }}>{t("home.needRegion")}</Text>
-        <Button label={t("home.region.pick")} onPress={() => router.push("/region")} />
+        <Text style={{ ...typography.resultTitle, color: c.text }}>{t("home.noRegion")}</Text>
+        <Button label={t("home.pickRegion")} onPress={() => router.push("/region")} />
       </SafeAreaView>
     );
   }
@@ -126,10 +126,8 @@ export default function Capture() {
         <ScrollView contentContainerStyle={{ padding: space.page, gap: space.md }}>
           {photo && <Image source={{ uri: photo.uri }} accessibilityIgnoresInvertColors style={{ height: 160, borderRadius: radius.md }} resizeMode="cover" />}
           <Animated.View entering={FadeInDown.duration(motion.cardEnterMs)}>
-            <ResultCard key={n} result={result} regionId={regionId} onChange={setResult} />
+            <ResultCard key={n} result={result} regionId={regionId} onChange={setResult} onRetake={reset} />
           </Animated.View>
-          <Button label={t("capture.retake")} onPress={reset} />
-          <Button variant="secondary" label="닫기" haptic={false} onPress={() => router.replace("/")} />
         </ScrollView>
       </SafeAreaView>
     );
@@ -146,8 +144,8 @@ export default function Capture() {
           {perm && !perm.canAskAgain
             ? <Button label={t("capture.permission.settings")} onPress={() => Linking.openSettings()} />
             : <Button label={t("capture.permission.allow")} disabled={!perm} onPress={() => requestPerm()} />}
-          <Button variant="secondary" label={t("capture.album")} onPress={album} />
-          <Button variant="secondary" label={t("capture.byName")} haptic={false} onPress={() => router.replace("/ask")} />
+          <Button variant="secondary" label={t("capture.button.album")} onPress={album} />
+          <Button variant="secondary" label={t("capture.button.askText")} haptic={false} onPress={() => router.replace("/ask")} />
           {err && <Text accessibilityRole="alert" style={{ ...typography.body, color: c.error }}>{err}</Text>}
         </View>
       </SafeAreaView>
@@ -168,7 +166,7 @@ export default function Capture() {
         </View>
         <View style={{ marginTop: space.smPlus, paddingHorizontal: space.md, paddingVertical: space.xs, borderRadius: radius.sm, backgroundColor: c.cameraBg }}>
           <Text accessibilityLiveRegion="polite" style={{ ...typography.caption, color: c.onCamera }}>
-            {busy ? (slow ? t("capture.slow") : t("capture.scanning")) : t("capture.guide")}
+            {busy ? (slow ? t("capture.slow") : t("capture.scanning.title")) : t("capture.guide")}
           </Text>
         </View>
       </View>
@@ -179,15 +177,15 @@ export default function Capture() {
             <View style={{ gap: space.sm, padding: space.md, borderRadius: radius.md, backgroundColor: c.surface }}>
               <Skeleton width={120} height={20} /><Skeleton height={24} /><Skeleton width="70%" height={16} />
             </View>
-            <Button variant="secondary" label={t("capture.cancel")} haptic={false} onPress={reset} />
+            <Button variant="secondary" label={t("capture.scanning.cancel")} haptic={false} onPress={reset} />
           </>
         ) : err ? (
           <View accessibilityRole="alert" style={{ gap: space.smPlus, padding: space.md, borderRadius: radius.md, backgroundColor: c.errorBg }}>
             <Text style={{ ...typography.bodyStrong, color: c.error }}>{t("capture.fail")}</Text>
             <Text style={{ ...typography.body, color: c.error }}>{err}</Text>
             {b64 && <Button label={t("capture.retry")} onPress={() => send(b64)} />}
-            <Button variant="secondary" label={t("capture.retake")} haptic={false} onPress={reset} />
-            <Button variant="secondary" label={t("capture.byName")} haptic={false} onPress={() => router.replace("/ask")} />
+            <Button variant="secondary" label={t("result.lowConfidence.retryPhoto")} haptic={false} onPress={reset} />
+            <Button variant="secondary" label={t("capture.button.askText")} haptic={false} onPress={() => router.replace("/ask")} />
           </View>
         ) : (
           <>
@@ -195,7 +193,7 @@ export default function Capture() {
               <Pressable accessibilityRole="button" accessibilityLabel="앨범에서 사진 선택" onPress={album}
                 style={({ pressed }) => ({ flex: 1, alignItems: "flex-start", opacity: pressed ? 0.6 : 1 })}>
                 <View style={{ width: sizes.albumButton, minHeight: sizes.albumButton, alignItems: "center", justifyContent: "center" }}>
-                  <Text style={{ ...typography.caption, color: c.onCamera }}>{t("capture.album")}</Text>
+                  <Text style={{ ...typography.caption, color: c.onCamera }}>{t("capture.button.album")}</Text>
                 </View>
               </Pressable>
               <Pressable accessibilityRole="button" accessibilityLabel="사진 촬영" disabled={!ready || busy} onPress={shoot}

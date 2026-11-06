@@ -13,7 +13,8 @@ export default function Sheet({ visible, onClose, children }: { visible: boolean
           <Pressable accessibilityLabel="닫기" style={{ flex: 1 }} onPress={onClose} />
         </Animated.View>
         <Animated.View entering={SlideInDown.duration(motion.screenMs * 1.5)}
-          style={{ padding: space.page, paddingBottom: space.xl, gap: space.md, borderTopLeftRadius: radius.lg, borderTopRightRadius: radius.lg, backgroundColor: c.surface }}>
+          style={{ padding: space.page, paddingBottom: space.xl, gap: space.md, borderTopLeftRadius: radius.lg, borderTopRightRadius: radius.lg, backgroundColor: c.surfaceRaised }}>
+          <View style={{ alignSelf: "center", width: 40, height: 4, borderRadius: radius.pill, backgroundColor: c.border }} />
           {children}
         </Animated.View>
       </View>

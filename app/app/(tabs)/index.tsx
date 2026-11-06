@@ -61,7 +61,7 @@ export default function Home() {
           </View>
           <Pressable accessibilityRole="button" accessibilityLabel="동네 변경" onPress={() => router.push("/region")}
             style={{ minHeight: sizes.touchMin, minWidth: sizes.touchMin, justifyContent: "center", alignItems: "flex-end" }}>
-            <Text style={{ ...typography.label, color: c.primary }}>{t("home.region.pick")}</Text>
+            <Text style={{ ...typography.label, color: c.primary }}>{t("home.pickRegion")}</Text>
           </Pressable>
         </View>
 
@@ -72,8 +72,8 @@ export default function Home() {
 
         {regionId === null && (
           <View style={{ gap: space.smPlus, padding: space.page, borderRadius: radius.md, backgroundColor: c.tint }}>
-            <Text style={{ ...typography.body, color: c.text }}>{t("home.needRegion")}</Text>
-            <Button label={t("home.region.pick")} onPress={() => router.push("/region")} />
+            <Text style={{ ...typography.body, color: c.text }}>{t("home.noRegion")}</Text>
+            <Button label={t("home.pickRegion")} onPress={() => router.push("/region")} />
           </View>
         )}
 
@@ -90,7 +90,7 @@ export default function Home() {
         {err && (
           <View accessibilityRole="alert" style={{ gap: space.smPlus, padding: space.page, borderRadius: radius.md, backgroundColor: c.errorBg }}>
             <Text style={{ ...typography.bodyStrong, color: c.error }}>{t("home.error")}</Text>
-            <Text style={{ ...typography.body, color: c.error }}>{data && err.code === "network" ? t("home.offline") : err.message}</Text>
+            <Text style={{ ...typography.body, color: c.error }}>{data && err.code === "network" ? t("home.offlineCached") : err.message}</Text>
             <Button label="다시 불러오기" onPress={load} haptic={false} />
           </View>
         )}
@@ -103,7 +103,7 @@ export default function Home() {
               <Text style={{ ...typography.label, color: c.subtext }}>{t("home.today.label")}</Text>
             </View>
             <Text accessibilityLabel={`오늘은 ${data.today}요일`} style={{ ...typography.display, color: c.text }}>{data.today}요일</Text>
-            {isMock && <Text style={{ ...typography.caption, color: c.error }}>{t("home.mock")}</Text>}
+            {isMock && <Text style={{ ...typography.caption, color: c.error }}>{t("common.mockNotice")}</Text>}
             {cats.length === 0 ? (
               <Text style={{ ...typography.body, color: c.subtext }}>{t("home.today.empty")}</Text>
             ) : (
@@ -117,7 +117,7 @@ export default function Home() {
                 <Text style={{ ...typography.label, color: c.primary }}>{t("home.today.all")}</Text>
               </Pressable>
             )}
-            <Text style={{ ...typography.label, color: c.text }}>{data.time ?? t("home.timeUnknown")}</Text>
+            <Text style={{ ...typography.label, color: c.text }}>{data.time ?? t("home.today.timeUnknown")}</Text>
             {loading && <Text style={{ ...typography.caption, color: c.subtext }}>{t("home.refreshing")}</Text>}
           </Animated.View>
         )}
@@ -165,7 +165,7 @@ export default function Home() {
       </ScrollView>
 
       <Sheet visible={sheet} onClose={() => setSheet(false)}>
-        <Text accessibilityRole="header" style={{ ...typography.section, color: c.text }}>{t("home.today.sheet")}</Text>
+        <Text accessibilityRole="header" style={{ ...typography.section, color: c.text }}>{t("home.today.sheetTitle")}</Text>
         {cats.map((x) => (
           <View key={x} style={{ minHeight: sizes.touchMin, flexDirection: "row", alignItems: "center", gap: space.smPlus }}>
             <CategoryIcon category={x} size={sizes.iconDefault} color={c.primary} />
