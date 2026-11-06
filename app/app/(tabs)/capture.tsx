@@ -14,6 +14,7 @@ import type { AskResponse } from "../../lib/api-types";
 import { t } from "../../lib/copy";
 import { pickFromLibrary, toBase64 } from "../../lib/image";
 import { addRecent } from "../../lib/recent";
+import { useTabBarStyle } from "../../lib/useTabBarStyle";
 import { useRegion } from "../../lib/useRegion";
 import { motion, radius, sizes, space, typography, useColors } from "../../theme";
 
@@ -33,6 +34,7 @@ export default function Capture() {
   const c = useColors();
   const router = useRouter();
   const navigation = useNavigation();
+  const tabStyle = useTabBarStyle();
   const regionId = useRegion();
   const [perm, requestPerm] = useCameraPermissions();
   const cam = useRef<CameraView>(null);
@@ -47,7 +49,7 @@ export default function Capture() {
   const job = useRef(0); // 취소·재시도 후 늦게 온 응답 무시용
   const [focused, setFocused] = useState(true);
   // 촬영 화면만 전체화면(탭 숨김). 결과 단계에서는 탭바를 되살려 홈·설정으로 갈 수 있게 한다.
-  useEffect(() => { navigation.setOptions({ tabBarStyle: result ? undefined : { display: "none" } }); }, [navigation, result]);
+  useEffect(() => { navigation.setOptions({ tabBarStyle: result ? tabStyle : { display: "none" } }); }, [navigation, result, tabStyle]);
 
   useFocusEffect(useCallback(() => { setFocused(true); return () => { setFocused(false); job.current++; }; }, []));
   useEffect(() => {
