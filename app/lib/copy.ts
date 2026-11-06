@@ -24,3 +24,23 @@ export const copy: Record<string, string> = {
   "region.saveError": "동네를 저장하지 못했어요. 다시 시도해 주세요.",
 };
 export const t = (k: string) => copy[k] ?? k;
+Object.assign(copy, {
+  "home.eyebrow": "오늘의 살림",
+  "home.title": "하나씩, 가볍게.",
+  "home.today.label": "오늘은",
+  "home.today.all": "오늘 배출 품목 모두 보기",
+  "home.today.sheet": "오늘 배출할 수 있는 품목",
+  "home.today.empty": "안내할 품목이 없어요. 동네 안내를 확인해 주세요.",
+  "home.action.capture": "찍어서 물어보기",
+  "home.week.title": "이번 주",
+  "home.recent.title": "최근 확인한 물건",
+  "home.recent.empty": "아직 확인한 물건이 없어요. 사진으로 첫 물건을 확인해 보세요.",
+  "home.loading": "동네 배출 일정을 확인하고 있어요",
+  "home.refreshing": "최신 안내를 확인하고 있어요",
+  "home.offline": "이전 안내예요. 연결 후 다시 확인해 주세요.",
+  "home.error": "배출 일정을 불러오지 못했어요",
+  "home.needRegion": "먼저 동네를 선택해 주세요.",
+  "home.region.pick": "동네 선택",
+  "home.mock": "예시 데이터 · 실제 배출 안내가 아니에요",
+  "home.timeUnknown": "배출 시간 확인 필요",
+});

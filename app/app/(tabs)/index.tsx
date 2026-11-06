@@ -1,63 +1,179 @@
 import { useCallback, useEffect, useState } from "react";
-import { ScrollView, Text, View } from "react-native";
-import { ErrorBox, Loading } from "../../components/Status";
-import { getSchedule, isMock } from "../../lib/api";
-import type { ScheduleResponse } from "../../lib/api-types";
-import { useRegion } from "../../lib/useRegion";
+import { Pressable, ScrollView, Text, View, useWindowDimensions } from "react-native";
+import { useFocusEffect, useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Animated, { FadeInDown } from "react-native-reanimated";
+import Button from "../../components/Button";
+import CategoryBadge from "../../components/CategoryBadge";
 import CategoryIcon from "../../components/CategoryIcon";
-import { colors, radius, space, typography } from "../../theme";
+import Chip from "../../components/Chip";
+import EmptyState from "../../components/EmptyState";
+import Sheet from "../../components/Sheet";
+import Skeleton from "../../components/Skeleton";
+import SourceDisclosure from "../../components/SourceDisclosure";
+import { ApiError, getSchedule, isMock } from "../../lib/api";
+import type { ScheduleResponse } from "../../lib/api-types";
+import { t } from "../../lib/copy";
+import { getRecent, Recent } from "../../lib/recent";
+import { useRegion } from "../../lib/useRegion";
+import { motion, radius, sizes, space, typography, useColors } from "../../theme";
 
-const DAYS = ["월", "화", "수", "목", "금", "토", "일"];
+const DAYS = ["월", "화", "수", "목", "금", "토", "일"] as const;
 
 export default function Home() {
+  const c = useColors();
+  const router = useRouter();
+  const { width, fontScale } = useWindowDimensions();
   const regionId = useRegion();
   const [s, setS] = useState<ScheduleResponse | null>(null);
-  const [err, setErr] = useState<string | null>(null);
+  const [err, setErr] = useState<ApiError | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [day, setDay] = useState<string | null>(null);
+  const [sheet, setSheet] = useState(false);
+  const [recent, setRecent] = useState<Recent[]>([]);
 
   const load = useCallback(() => {
     if (!regionId) return;
     setErr(null);
-    getSchedule(regionId).then(setS).catch((e) => setErr(e.message ?? "오류가 났어요"));
+    setLoading(true);
+    getSchedule(regionId)
+      .then((r) => { setS(r); setDay((d) => d ?? r.today); })
+      .catch((e) => setErr(e instanceof ApiError ? e : new ApiError("internal_error", String(e?.message ?? e))))
+      .finally(() => setLoading(false));
   }, [regionId]);
   useEffect(load, [load]);
+  useFocusEffect(useCallback(() => { getRecent().then(setRecent); }, []));
 
-  if (regionId === null) return <Text style={{ padding: space.md }}>설정 탭에서 동네를 먼저 골라 주세요.</Text>;
+  // 다른 동네 데이터는 새 응답이 올 때까지 쓰지 않는다
+  const data = s && s.region_id === regionId ? s : null;
+  const cats = data?.today_categories ?? [];
+  const wrap = width < 360 || fontScale > 1.3; // 요일 4+3행
+  const per = wrap ? 4 : 7;
+  const sel = day ?? data?.today ?? "";
+
   return (
-    <ScrollView contentContainerStyle={{ padding: space.md, gap: space.sm }} style={{ backgroundColor: colors.bg }}>
-      {!s && !err && <Loading />}
-      {err && <ErrorBox message={err} onRetry={load} />}
-      {s && (
-        <>
-          {isMock && <Text style={{ color: colors.warn }}>예시 데이터예요 (실제 배출 요일이 아니에요)</Text>}
-          <Text style={{ ...typography.section, fontWeight: "700", color: colors.text }}>
-            {s.today_categories.length
-              ? `오늘(${s.today})은 ${s.today_categories.join(", ")} 내놓는 날`
-              : `오늘(${s.today})은 내놓는 품목이 없어요`}
-          </Text>
-          {s.today_categories.length > 0 && (
-            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space.sm }}>
-              {s.today_categories.map((c) => (
-                <View key={c} style={{ flexDirection: "row", alignItems: "center", gap: space.xs, paddingHorizontal: 10,
-                  paddingVertical: 5, borderRadius: radius.pill, backgroundColor: colors.tint }}>
-                  <CategoryIcon category={c} size={20} />
-                  <Text style={{ color: colors.primary }}>{c}</Text>
+    <SafeAreaView edges={["top"]} style={{ flex: 1, backgroundColor: c.bg }}>
+      <ScrollView contentContainerStyle={{ padding: space.page, paddingTop: 0, gap: space.md }}>
+        <View style={{ minHeight: 64, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+          <View>
+            <Text style={{ ...typography.section, color: c.primary }}>SaLLiM</Text>
+            <Text style={{ ...typography.caption, color: c.subtext }}>분리배출 도우미</Text>
+          </View>
+          <Pressable accessibilityRole="button" accessibilityLabel="동네 변경" onPress={() => router.push("/region")}
+            style={{ minHeight: sizes.touchMin, minWidth: sizes.touchMin, justifyContent: "center", alignItems: "flex-end" }}>
+            <Text style={{ ...typography.label, color: c.primary }}>{t("home.region.pick")}</Text>
+          </Pressable>
+        </View>
+
+        <View>
+          <Text style={{ ...typography.eyebrow, color: c.subtext }}>{t("home.eyebrow")}</Text>
+          <Text accessibilityRole="header" style={{ ...typography.heading, color: c.text }}>{t("home.title")}</Text>
+        </View>
+
+        {regionId === null && (
+          <View style={{ gap: space.smPlus, padding: space.page, borderRadius: radius.md, backgroundColor: c.tint }}>
+            <Text style={{ ...typography.body, color: c.text }}>{t("home.needRegion")}</Text>
+            <Button label={t("home.region.pick")} onPress={() => router.push("/region")} />
+          </View>
+        )}
+
+        {regionId && !data && !err && (
+          <View accessible accessibilityLabel={t("home.loading")} style={{ gap: space.smPlus, padding: space.page, borderRadius: radius.md, borderWidth: 1, borderColor: c.divider, backgroundColor: c.surface, minHeight: 236 }}>
+            <Skeleton width={80} height={20} />
+            <Skeleton width={160} height={56} />
+            <Skeleton height={32} />
+            <Skeleton width={120} height={20} />
+            <Text style={{ ...typography.caption, color: c.subtext }}>{t("home.loading")}</Text>
+          </View>
+        )}
+
+        {err && (
+          <View accessibilityRole="alert" style={{ gap: space.smPlus, padding: space.page, borderRadius: radius.md, backgroundColor: c.errorBg }}>
+            <Text style={{ ...typography.bodyStrong, color: c.error }}>{t("home.error")}</Text>
+            <Text style={{ ...typography.body, color: c.error }}>{data && err.code === "network" ? t("home.offline") : err.message}</Text>
+            <Button label="다시 불러오기" onPress={load} haptic={false} />
+          </View>
+        )}
+
+        {data && (
+          <Animated.View entering={FadeInDown.duration(motion.cardEnterMs).withInitialValues({ transform: [{ translateY: motion.cardOffsetY }] })}
+            style={{ minHeight: 236, gap: space.sm, padding: space.page, borderRadius: radius.md, borderWidth: 1, borderColor: c.divider, backgroundColor: c.surface }}>
+            <View style={{ flexDirection: "row", alignItems: "center", gap: space.sm }}>
+              <View style={{ width: space.sm, height: space.md, borderRadius: radius.xs, backgroundColor: c.accent }} />
+              <Text style={{ ...typography.label, color: c.subtext }}>{t("home.today.label")}</Text>
+            </View>
+            <Text accessibilityLabel={`오늘은 ${data.today}요일`} style={{ ...typography.display, color: c.text }}>{data.today}요일</Text>
+            {isMock && <Text style={{ ...typography.caption, color: c.error }}>{t("home.mock")}</Text>}
+            {cats.length === 0 ? (
+              <Text style={{ ...typography.body, color: c.subtext }}>{t("home.today.empty")}</Text>
+            ) : (
+              <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space.sm, marginTop: space.smPlus }}>
+                {cats.slice(0, 2).map((x) => <CategoryBadge key={x} category={x} />)}
+                {cats.length > 2 && <Text style={{ ...typography.label, color: c.subtext, alignSelf: "center" }}>외 {cats.length - 2}종</Text>}
+              </View>
+            )}
+            {cats.length > 2 && (
+              <Pressable accessibilityRole="button" onPress={() => setSheet(true)} style={{ minHeight: sizes.touchMin, justifyContent: "center" }}>
+                <Text style={{ ...typography.label, color: c.primary }}>{t("home.today.all")}</Text>
+              </Pressable>
+            )}
+            <Text style={{ ...typography.label, color: c.text }}>{data.time ?? t("home.timeUnknown")}</Text>
+            {loading && <Text style={{ ...typography.caption, color: c.subtext }}>{t("home.refreshing")}</Text>}
+          </Animated.View>
+        )}
+
+        <Button label={t("home.action.capture")} disabled={!regionId} onPress={() => router.push("/capture")} />
+
+        {data && (
+          <View style={{ gap: space.smPlus, marginTop: space.sm }}>
+            <Text accessibilityRole="header" style={{ ...typography.section, color: c.text }}>{t("home.week.title")}</Text>
+            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space.xxs }}>
+              {DAYS.map((d) => (
+                <View key={d} style={{ width: `${100 / per - 1}%`, minWidth: sizes.touchAbsoluteMin }}>
+                  <Chip label={d === data.today ? `${d}·오늘` : d} selected={d === sel} onPress={() => setDay(d)} />
                 </View>
               ))}
             </View>
-          )}
-          {s.time && <Text style={{ color: colors.subtext }}>배출 시간 {s.time}</Text>}
-          {DAYS.map((d) => (
-            <View key={d} style={{ flexDirection: "row", gap: space.md }}>
-              <Text style={{ width: 24, fontWeight: d === s.today ? "700" : "400" }}>{d}</Text>
-              <Text style={{ flex: 1, color: colors.text }}>{s.week[d]?.join(", ") || "-"}</Text>
+            <View style={{ gap: space.sm, padding: space.md, borderRadius: radius.md, borderWidth: 1, borderColor: c.divider, backgroundColor: c.surface }}>
+              <Text style={{ ...typography.label, color: c.subtext }}>{sel}요일</Text>
+              {(data.week[sel] ?? []).length === 0
+                ? <Text style={{ ...typography.body, color: c.subtext }}>{t("home.today.empty")}</Text>
+                : <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space.sm }}>{data.week[sel].map((x) => <CategoryBadge key={x} category={x} />)}</View>}
             </View>
+            {data.note && <Text style={{ ...typography.caption, color: c.subtext }}>{data.note}</Text>}
+          </View>
+        )}
+
+        <View style={{ gap: space.sm, marginTop: space.sm }}>
+          <Text accessibilityRole="header" style={{ ...typography.section, color: c.text }}>{t("home.recent.title")}</Text>
+          {recent.length === 0 && <Text style={{ ...typography.body, color: c.subtext }}>{t("home.recent.empty")}</Text>}
+          {recent.map((r) => (
+            <Pressable key={r.item_key + r.region_id} accessibilityRole="button" onPress={() => router.push({ pathname: "/ask", params: { q: r.item_name } })}
+              style={({ pressed }) => ({ minHeight: 72, flexDirection: "row", alignItems: "center", gap: space.smPlus, padding: space.md, borderRadius: radius.md,
+                borderWidth: 1, borderColor: c.divider, backgroundColor: pressed ? c.surfacePressed : c.surface })}>
+              <CategoryIcon category={r.category} size={sizes.iconDefault} color={c.primary} />
+              <View style={{ flex: 1 }}>
+                <Text style={{ ...typography.body, color: c.text }}>{r.item_name}</Text>
+                <Text style={{ ...typography.caption, color: c.subtext }}>{r.category}{r.region_id !== regionId ? " · 이전 동네" : ""}</Text>
+              </View>
+              <Text style={{ ...typography.section, color: c.subtext }}>›</Text>
+            </Pressable>
           ))}
-          {s.note && <Text style={{ color: colors.subtext, ...typography.caption }}>{s.note}</Text>}
-          {s.sources.map((x) => (
-            <Text key={x.url} style={{ color: colors.subtext, ...typography.caption }}>출처: {x.title} ({x.updated})</Text>
-          ))}
-        </>
-      )}
-    </ScrollView>
+        </View>
+
+        {data && <SourceDisclosure sources={data.sources} />}
+      </ScrollView>
+
+      <Sheet visible={sheet} onClose={() => setSheet(false)}>
+        <Text accessibilityRole="header" style={{ ...typography.section, color: c.text }}>{t("home.today.sheet")}</Text>
+        {cats.map((x) => (
+          <View key={x} style={{ minHeight: sizes.touchMin, flexDirection: "row", alignItems: "center", gap: space.smPlus }}>
+            <CategoryIcon category={x} size={sizes.iconDefault} color={c.primary} />
+            <Text style={{ ...typography.body, color: c.text }}>{x}</Text>
+          </View>
+        ))}
+        <Button variant="secondary" label="닫기" haptic={false} onPress={() => setSheet(false)} />
+      </Sheet>
+    </SafeAreaView>
   );
 }
